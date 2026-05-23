@@ -6,8 +6,7 @@
 #      Name: NOTION_TOKEN   Value: your Notion integration token
 #   2. Repo Settings -> Pages -> Source: "GitHub Actions"
 #
-# Note: this workflow assumes the site lives at the repo root. If your site is in
-# a subfolder (e.g. hub/), change the two paths marked below.
+# Note: this workflow assumes the site lives at the repo root.
 
 name: Sync Notion & Deploy
 
@@ -34,22 +33,22 @@ jobs:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
-          node-version: 20
+          node-version: 22
 
       - name: Sync journal from Notion
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
-        run: node scripts/sync-notion.js # <- adjust path if site is in a subfolder
+        run: node scripts/sync-notion.js
 
-      - uses: actions/configure-pages@v4
+      - uses: actions/configure-pages@v5
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: "." # <- the folder to publish (use "hub" if site is in hub/)
+          path: "." # <- the folder to publish
 
       - id: deploy
         uses: actions/deploy-pages@v4
