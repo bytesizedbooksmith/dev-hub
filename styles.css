@@ -77,6 +77,26 @@ a:hover { color: var(--teal-dark); text-decoration: underline; }
 .nav a:hover { color: var(--teal-dark); text-decoration: none; }
 .nav a.active { color: var(--navy); border-bottom: 2px solid var(--teal); padding-bottom: 2px; }
 
+/* ---------- banner hero (home) ---------- */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0);
+  white-space: nowrap; border: 0;
+}
+header.banner {
+  margin: 28px 0 44px;
+}
+header.banner img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  border: 1px solid var(--rule);
+  box-shadow: 0 6px 20px rgba(2, 40, 89, 0.10);
+}
+
 /* ---------- hero ---------- */
 header.hero {
   text-align: center;
