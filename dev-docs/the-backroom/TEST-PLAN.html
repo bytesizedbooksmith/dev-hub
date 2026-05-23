@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Backroom — Step 3 Test Plan</title>
+<style>
+  :root {
+    --wine: #024873;
+    --wine-dark: #022859;
+    --cream: #faf8f7;
+    --cream-dark: #ece5e5;
+    --charcoal: #333333;
+    --ink: #1f1f1f;
+    --gold: #0fbf9f;
+    --gold-soft: #7fded0;
+    --muted: #6f6a6a;
+    --rule: #e4dddd;
+    --green: #024873;
+    --green-soft: #dceaf5;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--cream);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .page { max-width: 1080px; margin: 0 auto; padding: 48px 32px 96px; }
+  header.hero {
+    text-align: center;
+    border-bottom: 3px double var(--gold);
+    padding-bottom: 32px;
+    margin-bottom: 40px;
+  }
+  header.hero .eyebrow {
+    color: var(--wine);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  header.hero h1 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 56px;
+    margin: 12px 0 4px;
+    color: var(--wine-dark);
+    letter-spacing: -0.5px;
+  }
+  header.hero .tagline { font-style: italic; color: var(--muted); font-size: 18px; margin: 4px 0 16px; }
+  header.hero .stamp {
+    display: inline-block;
+    border: 2px solid var(--wine);
+    color: var(--wine);
+    padding: 6px 18px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    font-size: 13px;
+    text-transform: uppercase;
+    transform: rotate(-2deg);
+    background: var(--cream);
+  }
+  h2 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 32px;
+    color: var(--wine-dark);
+    margin: 56px 0 8px;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 8px;
+  }
+  h2 .num { color: var(--gold); font-style: italic; margin-right: 10px; }
+  h3 { font-family: Georgia, "Times New Roman", serif; font-size: 22px; color: var(--charcoal); margin: 32px 0 6px; }
+  p.lede { font-size: 18px; color: var(--charcoal); margin-top: 0; }
+  p { margin: 12px 0; }
+  ul, ol { margin: 8px 0 16px; padding-left: 24px; }
+  li { margin: 6px 0; }
+  code, .mono {
+    font-family: ui-monospace, SFMono-Regular, "Menlo", Consolas, "Courier New", monospace;
+    font-size: 0.9em;
+    background: var(--cream-dark);
+    padding: 1px 6px;
+    border-radius: 3px;
+    color: var(--wine-dark);
+  }
+
+  /* Layer blocks */
+  .layer {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 24px 28px;
+    margin: 20px 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .layer::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 6px;
+    background: var(--wine);
+  }
+  .layer.l0::before { background: var(--muted); }
+  .layer.l1::before { background: var(--gold); }
+  .layer.l2::before { background: var(--wine); }
+  .layer.l3::before { background: var(--wine-dark); }
+  .layer-head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+  .layer-tag {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    color: var(--cream);
+    background: var(--wine);
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    letter-spacing: 0.05em;
+  }
+  .layer.l0 .layer-tag { background: var(--muted); }
+  .layer.l1 .layer-tag { background: var(--gold); color: var(--ink); }
+  .layer.l3 .layer-tag { background: var(--wine-dark); }
+  .layer h3 { margin: 0; color: var(--wine-dark); font-size: 24px; }
+  .layer .cost {
+    margin-left: auto;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--green);
+    background: var(--green-soft);
+    padding: 3px 10px;
+    border-radius: 12px;
+  }
+  .layer .cost.live { color: var(--wine); background: #dceaf5; }
+  .layer .what { color: var(--muted); font-style: italic; margin: 10px 0 16px; font-size: 16px; }
+  .sub { font-family: Georgia, serif; color: var(--wine); font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em; margin: 18px 0 4px; font-weight: 700; }
+
+  /* Happy gate */
+  .gate {
+    background: var(--green-soft);
+    border: 1px solid #b6cfe3;
+    border-left: 4px solid var(--green);
+    border-radius: 0 4px 4px 0;
+    padding: 12px 18px;
+    margin: 16px 0 4px;
+    font-size: 15px;
+  }
+  .gate strong { color: var(--green); }
+
+  /* Screenshot prompt */
+  .shot {
+    background: #e6f7f3;
+    border: 1px dashed var(--gold);
+    border-radius: 4px;
+    padding: 12px 16px;
+    margin: 14px 0;
+    font-size: 14px;
+    color: #045a4a;
+  }
+  .shot::before { content: "📸  "; }
+
+  blockquote {
+    border-left: 4px solid var(--gold);
+    background: #fff;
+    margin: 20px 0;
+    padding: 16px 24px;
+    font-style: italic;
+    color: var(--charcoal);
+    font-size: 17px;
+    border-radius: 0 4px 4px 0;
+  }
+  blockquote cite { display: block; margin-top: 8px; font-style: normal; font-size: 13px; color: var(--muted); }
+
+  pre.tree, pre.snippet {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 18px 22px;
+    border-radius: 6px;
+    font-family: ui-monospace, SFMono-Regular, "Menlo", Consolas, "Courier New", monospace;
+    font-size: 13px;
+    line-height: 1.55;
+    overflow-x: auto;
+    border-left: 6px solid var(--gold);
+  }
+  pre.tree .c { color: var(--gold-soft); }
+  pre.tree .m { color: #85B7EB; }
+  .say {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-left: 4px solid var(--wine);
+    border-radius: 0 4px 4px 0;
+    padding: 12px 18px;
+    margin: 12px 0;
+    font-style: italic;
+    color: var(--charcoal);
+  }
+  .say::before { content: "Say to the machine:  "; font-style: normal; font-weight: 700; color: var(--wine); display: block; font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+
+  table {
+    width: 100%; border-collapse: collapse; margin: 16px 0;
+    background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.04); font-size: 15px;
+  }
+  th, td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { background: var(--cream-dark); color: var(--wine-dark); font-weight: 700; font-family: Georgia, serif; }
+  tr:last-child td { border-bottom: none; }
+
+  nav.toc {
+    background: #fff; border: 1px solid var(--rule); border-left: 4px solid var(--gold);
+    padding: 16px 24px; margin: 0 0 32px; border-radius: 4px; columns: 2; column-gap: 32px;
+  }
+  nav.toc h3 { margin: 0 0 8px; column-span: all; font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--wine); }
+  nav.toc a { color: var(--charcoal); text-decoration: none; display: block; padding: 3px 0; font-size: 14px; }
+  nav.toc a:hover { color: var(--wine); text-decoration: underline; }
+
+  .callout {
+    background: #fff; border: 1px solid var(--rule); border-left: 4px solid var(--wine);
+    border-radius: 0 4px 4px 0; padding: 16px 20px; margin: 20px 0;
+  }
+  .callout h4 { margin: 0 0 6px; font-family: Georgia, serif; color: var(--wine-dark); }
+  .callout.warn { border-left-color: #f2059f; }
+  .callout.warn h4 { color: #f2059f; }
+
+  footer {
+    margin-top: 80px; padding-top: 24px; border-top: 3px double var(--gold);
+    text-align: center; color: var(--muted); font-size: 14px; font-style: italic;
+  }
+  @media (max-width: 720px) {
+    header.hero h1 { font-size: 42px; }
+    nav.toc { columns: 1; }
+    .page { padding: 32px 20px 64px; }
+    .layer .cost { margin-left: 0; }
+  }
+  @media print {
+    body { background: #fff; }
+    .page { padding: 0; max-width: 100%; }
+    .layer, table, .callout { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+<header class="hero">
+  <div class="eyebrow">Step 3 · Test Until You're Happy</div>
+  <h1>The Shakedown</h1>
+  <p class="tagline">A four-layer plan for testing the Backroom before you trust it with a real book.</p>
+  <div class="stamp">For Angie · 2026-05-23</div>
+</header>
+
+<nav class="toc">
+  <h3>The plan</h3>
+  <a href="#why">Why test in layers</a>
+  <a href="#map">The four layers at a glance</a>
+  <a href="#l0">Layer 0 — Plumbing (mock, $0)</a>
+  <a href="#l1">Layer 1 — Pen-name setup (live)</a>
+  <a href="#l2">Layer 2 — The shakedown scene (the real test)</a>
+  <a href="#l3">Layer 3 — A short complete work</a>
+  <a href="#material">Your test material — the sandbox pen name</a>
+  <a href="#screenshots">The screenshot habit</a>
+  <a href="#step4">Looking ahead — Step 4, the GUI</a>
+</nav>
+
+<section id="why">
+<h2><span class="num">·</span>Why we test in layers</h2>
+<p class="lede">Your Notion process is blunt about this step: <em>"This is where most people quit, and it's the most important step. Do not move on until the outputs make you genuinely happy."</em></p>
+<p>The trap is judging the whole machine on one big run. If a 30,000-word run comes back wrong, you don't know <em>which</em> of the forty-one moving parts went wrong, and you've spent real money to learn that. So we do the opposite: four widening layers, smallest and cheapest first. Each layer either earns your confidence or shows you exactly where the seam is. The first two layers cost essentially nothing.</p>
+<p>Two facts about your machine right now shape the plan. It's currently in <strong>live mode</strong> (no <code>.mock-mode</code> flag on disk), and <code>pen-names/</code> is empty — no real book has ever run through it. So your first real run does two new things at once: it stands up a pen name <em>and</em> writes a book. We keep that first run tiny on purpose.</p>
+<blockquote>
+  The smoke test you already passed proved the plumbing connects. It ran in mock mode — every model call returned placeholder text. You have not yet seen whether the <em>prose</em> is something you'd want to read. That is the entire job of Step 3.
+  <cite>— What "the machine is ready" actually means</cite>
+</blockquote>
+</section>
+
+<section id="map">
+<h2><span class="num">·</span>The four layers at a glance</h2>
+<table>
+  <thead>
+    <tr><th style="width:8%">Layer</th><th style="width:24%">What it tests</th><th>What you're judging</th><th style="width:14%">Cost</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>0</strong></td><td>Plumbing</td><td>Do files land in the right place? Do the five human moments surface where they should? Does the Boss freeze on a halt?</td><td>$0 · mock</td></tr>
+    <tr><td><strong>1</strong></td><td>Pen-name setup</td><td>Does the machine correctly inherit your voice files before it ever tries to write?</td><td>Tiny · live</td></tr>
+    <tr><td><strong>2</strong></td><td>One shakedown scene</td><td><strong>The real test.</strong> Is the prose something you'd write? Do two characters sound like different people?</td><td>Low · live</td></tr>
+    <tr><td><strong>3</strong></td><td>A short complete work</td><td>Drafting in order, the Consiglieres, the severity ladder, the full Cleanup Crew — judged as a whole reading experience.</td><td>Moderate · live</td></tr>
+  </tbody>
+</table>
+<p>Each layer ends with a <strong>happy-gate</strong>: a plain question you answer honestly before advancing. If the answer is no, we stop and fix that layer. You never carry a problem forward into a more expensive layer.</p>
+</section>
+
+<section id="l0">
+<h2><span class="num">0.</span>Layer 0 — Plumbing <span style="font-size:18px;color:var(--muted)">(mock mode, $0)</span></h2>
+<div class="layer l0">
+  <div class="layer-head"><span class="layer-tag">Layer 0</span><h3>Watch the wiring with your own eyes</h3><span class="cost">$0 · mock</span></div>
+  <p class="what">You already ran an 11-phase smoke test during the build. The point of repeating it now is that <em>you</em> watch it — not to test the code, but to learn the machine's rhythm before any money is on the line.</p>
+
+  <div class="sub">Do this</div>
+  <ol>
+    <li>Turn mock mode back ON. The flag file controls everything.
+      <div class="say">Turn on mock mode. Then confirm the banner says mock mode is ON.</div>
+    </li>
+    <li>Run one full book end-to-end with the throwaway pen name (spec below). Placeholder prose stands in for everything; every paragraph is stamped <code>[MOCK]</code>.
+      <div class="say">Start a new book in mock mode using the test pen name. Walk me through every phase. Pause at each of the five human moments and tell me plainly what you're showing me and why.</div>
+    </li>
+  </ol>
+
+  <div class="sub">What to watch for</div>
+  <ul>
+    <li><strong>The five human moments actually surface</strong> — Intake review, Gate 1 (Foundation), Gate 2 (Blueprint), Drift = discovery (may not fire on a short mock run — that's fine), Cleanup ratification.</li>
+    <li><strong>Files land where the tree says they should</strong> — a book folder under <code>pen-names/test-pen/standalones/</code>, planning artifacts, a <code>manuscript/</code> folder, a <code>runs/</code> evidence trail.</li>
+    <li><strong>The Boss never asks "shall I continue?"</strong> at Note / Word / Sit-down level. If it pings you for permission on small stuff, that's a bug to feed back — the whole design is that it doesn't.</li>
+    <li><strong>Freeze-on-halt works</strong> — if you can trigger a "Do it over," the machine should stop cleanly and leave nothing half-changed.</li>
+  </ul>
+
+  <div class="shot">If anything surfaces in the wrong order, lands in the wrong folder, or asks you a question it shouldn't — screenshot it and paste it back. Mock mode is exactly where you want to find wiring bugs, because they cost nothing here.</div>
+
+  <div class="gate"><strong>Happy-gate 0:</strong> Did all five human moments surface in the right order, did files land where you expected, and did the Boss stay quiet on the small stuff? If yes → turn mock mode OFF and go to Layer 1.</div>
+</div>
+</section>
+
+<section id="l1">
+<h2><span class="num">1.</span>Layer 1 — Pen-name setup <span style="font-size:18px;color:var(--muted)">(live, tiny cost)</span></h2>
+<div class="layer l1">
+  <div class="layer-head"><span class="layer-tag">Layer 1</span><h3>Stand up the pen name; prove voice inheritance</h3><span class="cost live">Tiny · live</span></div>
+  <p class="what">Before the machine writes a single real sentence, it has to know whose voice it's writing in. This layer sets that up and confirms the machine reads it.</p>
+
+  <div class="sub">Do this</div>
+  <ol>
+    <li>Turn mock mode OFF (delete the flag). Confirm the banner now says <strong>Live mode</strong>.</li>
+    <li>Create the throwaway pen name. Because this is a sandbox, you don't need polished voice files — but the test is more meaningful if you drop in <em>a</em> voice bible, even a rough one, so you can see the machine honor it.
+      <div class="say">Create a new throwaway pen name called "test-pen". I'll give you a short voice bible to drop in. Don't run the style-builder from scratch — use what I provide.</div>
+    </li>
+    <li>Ask the machine to read its own setup back to you.
+      <div class="say">Read the test-pen voice files back to me in your own words. What voice do you think you're writing in, and where did you get that?</div>
+    </li>
+  </ol>
+
+  <div class="sub">What to watch for</div>
+  <ul>
+    <li>The machine's summary of the voice should sound like <em>your</em> file, not a generic "warm, engaging prose" boilerplate. If it's generic, it didn't really read the file — feed that back.</li>
+    <li>The pen-name folder should contain the seven inherited files (<code>pen-name-profile</code>, <code>voice-bible</code>, <code>style-guide</code>, <code>voice-anchor</code>, <code>crutch-list</code>, <code>prose-rules</code>, <code>audience-profile</code>).</li>
+  </ul>
+
+  <div class="gate"><strong>Happy-gate 1:</strong> Does the machine describe the voice back to you accurately, citing your file? If yes → Layer 2.</div>
+</div>
+</section>
+
+<section id="l2">
+<h2><span class="num">2.</span>Layer 2 — The shakedown scene <span style="font-size:18px;color:var(--wine)">(the real test)</span></h2>
+<div class="layer l2">
+  <div class="layer-head"><span class="layer-tag">Layer 2</span><h3>One scene. Two people who want different things.</h3><span class="cost live">Low · live</span></div>
+  <p class="what">Your machine already has a name for this: the "shakedown piece." The Boss is built to offer one representative scene as a pilot before committing to a full book. We use that, deliberately, with a <strong>two-hander tension scene</strong> — two characters, one room, conflicting wants.</p>
+
+  <div class="callout">
+    <h4>Why this scene type, specifically</h4>
+    <p>A two-hander is the single most revealing voice test there is. It exercises <em>three</em> systems at once — dialogue cards (do the characters sound distinct?), interiority (does the POV character's inner life ring true?), and voice inheritance (does it sound like your pen name?) — without the higher bar of a spice or action beat clouding your read. If two characters sound like the same person wearing two name tags, you'll know in a paragraph.</p>
+  </div>
+
+  <div class="sub">Do this</div>
+  <ol>
+    <li>With the sandbox arrangement filled (spec below), let the machine run the Setup to Gate 2, then ask for the shakedown.
+      <div class="say">Don't draft the whole book. Run the Setup, and at the end offer me the shakedown piece — pick a mid-book two-hander scene where the two leads want opposite things. Draft just that one scene, live.</div>
+    </li>
+    <li>Read it the way you'd read a submission. Out loud, even. Mark the lines that work and the lines that don't.</li>
+  </ol>
+
+  <div class="sub">What you're actually judging</div>
+  <ul>
+    <li><strong>Do the two voices separate?</strong> Cover the dialogue tags. Can you still tell who's speaking?</li>
+    <li><strong>Is the interiority earned, or on-the-nose?</strong> Your original pitch wanted the "afraid of horses because of the stable boy" depth — felt, not spelled out. Look for that.</li>
+    <li><strong>Does it sound like your pen name</strong> or like generic competent AI prose?</li>
+    <li><strong>The AI-tells.</strong> Em-dash overuse, "not X but Y" constructions, repeated descriptors. These get caught at Cleanup in a full run, but eyeball them here too.</li>
+    <li><strong>Would you change it, or do you </strong>have<strong> to change it?</strong> Your stated goal: a manuscript you'd want to edit by choice, not rescue by necessity.</li>
+  </ul>
+
+  <div class="shot">This is the layer where screenshots matter most. For every line that feels flat, paste it back with one note: "dialogue feels flat here," "this character would never say that," "too on-the-nose." The machine adjusts the dialogue-cards and prose-rules from your notes — that's the feedback loop that makes it sound like you.</div>
+
+  <div class="gate"><strong>Happy-gate 2 (the big one):</strong> Reading this scene, are you genuinely happy? Not "impressed it works" — happy, the way you'd be with your own draft. If no, we iterate <em>here</em>, cheaply, until yes. Do not advance on "good enough."</div>
+</div>
+</section>
+
+<section id="l3">
+<h2><span class="num">3.</span>Layer 3 — A short complete work <span style="font-size:18px;color:var(--muted)">(live)</span></h2>
+<div class="layer l3">
+  <div class="layer-head"><span class="layer-tag">Layer 3</span><h3>The whole machine, judged as a reading experience</h3><span class="cost live">Moderate · live</span></div>
+  <p class="what">Only after Layer 2 makes you happy. A short story or novelette — long enough to exercise drafting-in-order, the per-piece Consigliere audits, the Boss's severity ladder, and the full six-inspector Cleanup Crew; short enough to read in one sitting and judge whole.</p>
+
+  <div class="sub">Do this</div>
+  <ol>
+    <li>Set the sandbox arrangement's <code>length_target</code> low — a 6,000–10,000 word novelette is ideal. (The <code>lester-dent</code> framework is literally the 6,000-word pulp formula, if you want a structure that fits this length — though it's a stub, so it'll plan generically.)</li>
+    <li>Let it run the full pipeline, live, end to end.
+      <div class="say">Now draft the whole short work, live, start to finish. Run the full Cleanup Crew at the end and bring me the flags to ratify.</div>
+    </li>
+  </ol>
+
+  <div class="sub">What to watch for</div>
+  <ul>
+    <li><strong>Drafting holds order and continuity</strong> — scene 4 remembers what happened in scene 2. The Books (world-state) should be doing this.</li>
+    <li><strong>The severity ladder behaves</strong> — small stuff settled silently (Sit-downs), only real breaks halting you (Do-it-over / Kick-upstairs). Check the <code>job-log.md</code> afterward to see what the Boss settled without bothering you.</li>
+    <li><strong>The Cleanup Crew earns its keep</strong> — pacing flags, repetition, broken promises, the engagement curve. Are the flags real, or noise?</li>
+    <li><strong>You read the finished thing as a reader.</strong> Did it pull you? The Cold Read inspector simulates this; your real read is the ground truth.</li>
+  </ul>
+
+  <div class="gate"><strong>Happy-gate 3:</strong> Did the finished work hold together, did the Boss bother you only when it should have, and would you publish something built this way (under a real pen name)? If yes → Step 3 is done. You're ready to think about Step 4, the GUI.</div>
+</div>
+</section>
+
+<section id="material">
+<h2><span class="num">·</span>Your test material — the sandbox pen name</h2>
+<p>So you're not inventing test material under pressure, here's a ready-to-use throwaway. Nothing real is on the line; the point is to learn the machine's behavior. Delete the whole <code>test-pen/</code> folder when you're done.</p>
+
+<h3>The pen name</h3>
+<table>
+  <tbody>
+    <tr><th style="width:28%">slug</th><td><code>test-pen</code></td></tr>
+    <tr><th>display name</th><td>Quill Sandoval (a throwaway — not a real brand)</td></tr>
+    <tr><th>primary genre</th><td>Contemporary mystery / suspense (low world-building overhead, fast to judge)</td></tr>
+    <tr><th>voice in one line</th><td>Dry, observational, close third. Short sentences when tense. The narrator notices small physical details and trusts the reader to do the math.</td></tr>
+  </tbody>
+</table>
+
+<h3>The sandbox book — a filled arrangement</h3>
+<p>A standalone, deliberately small. The hook is built to <em>force</em> a two-hander so Layer 2 has a scene to draft.</p>
+<pre class="snippet">working_title:        The Locked Room Upstairs
+pen_name:             test-pen
+series_name:          (blank — standalone)
+book_number:          (blank)
+genre:                contemporary mystery
+structure_framework:  lester-dent          # the 6,000-word formula; stub, plans generically
+length_target:        8000                  # novelette — read in one sitting
+
+hook:                 A house-sitter finds the one door she was told never
+                      to open already unlocked, and the owner's sister at
+                      the top of the stairs insisting she opened it herself.
+audience:             Cozy-adjacent mystery readers who want tension over gore.
+comp_titles:          The Guest List; The Maid
+
+payoff_1:  The reader doubts both women equally before the truth lands.
+payoff_2:  The "locked room" reveal recolors the opening scene on reread.
+payoff_3:  The house-sitter trusts her own memory by the last page.
+
+pov:            third limited (house-sitter)
+tense:          past
+heat_level:     closed-door
+content_warnings: none load-bearing
+
+voice_reference: (blank — inherit test-pen voice)
+disclosure:      "This book was written with author-directed AI tools."</pre>
+
+<div class="callout">
+  <h4>The built-in two-hander</h4>
+  <p>The premise puts two women in a house with one contested fact between them. That's your Layer 2 shakedown scene handed to you: the house-sitter and the sister, top of the stairs, each certain the other is lying. When the Boss offers the shakedown, point it here.</p>
+</div>
+
+<p>When you're ready, I can write this pen name and arrangement straight onto disk under <code>pen-names/test-pen/</code> so it's sitting there for Layer 0 — just say the word.</p>
+</section>
+
+<section id="screenshots">
+<h2><span class="num">·</span>The screenshot habit</h2>
+<p>Your Notion process calls screenshots "your universal translator," and EAW's margin note says she did it <em>even when she thought she knew</em>. For this machine specifically, the highest-value screenshots are:</p>
+<ul>
+  <li><strong>Any prose line that's wrong</strong> — paste it with a one-line craft note. This is how the dialogue-cards and prose-rules learn your taste.</li>
+  <li><strong>Any moment the Boss asks permission it shouldn't</strong> — the design is no permission-pings on small stuff; a ping is a bug.</li>
+  <li><strong>Any file in the wrong place</strong> — the folder tree is the ground truth; drift there ripples.</li>
+  <li><strong>Any error or halt you don't understand</strong> — don't close the window; screenshot the whole screen and paste it.</li>
+</ul>
+<p>You don't need to diagnose anything. Screenshot, paste, one sentence of what felt off. That's the whole job.</p>
+</section>
+
+<section id="step4">
+<h2><span class="num">·</span>Looking ahead — Step 4, the GUI</h2>
+<p class="lede">You asked to start thinking about the GUI once testing is underway. Here's the shape of it, so it's in your head while you run Layers 0–3.</p>
+<p>The good news: <strong>Step 3 is also GUI design research.</strong> Every time the machine pauses for you during testing, you're discovering a screen the app will need. The five human moments are, almost exactly, the five screens of the eventual interface.</p>
+
+<table>
+  <thead>
+    <tr><th style="width:32%">Human moment (the machine)</th><th>Becomes this in the app (Step 4)</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Intake review</td><td>A "New Book" form — the arrangement fields as friendly inputs, with the three on-ramps as a mode picker.</td></tr>
+    <tr><td>Gate 1 — Foundation</td><td>A review screen: premise, structure, characters — with Approve / Send back buttons.</td></tr>
+    <tr><td>Gate 2 — Blueprint</td><td>A second review screen for world / outline / voice / conflict map.</td></tr>
+    <tr><td>Drift = discovery</td><td>A notification + a small decision card: "the draft found something better — keep it?"</td></tr>
+    <tr><td>Cleanup ratification</td><td>The richest screen: a flag-by-flag Accept / Reject / Revise queue.</td></tr>
+  </tbody>
+</table>
+
+  <div class="callout">
+    <h4>What the GUI does and doesn't change</h4>
+    <p>It changes <em>how you talk to the machine</em> — buttons and windows instead of typed instructions. It does <strong>not</strong> change the machine underneath; the forty-one skills, the Boss, the severity ladder all keep running exactly as they do now. The Agent SDK (linked in your Notion doc) is the bridge that lets a little app window keep using your Claude subscription to drive those same skills.</p>
+  </div>
+
+  <div class="callout warn">
+    <h4>One firm recommendation</h4>
+    <p>Do not start the GUI until Happy-gate 2 passes. The doc's Step 4 says "<em>once the command-line version works.</em>" If you build a beautiful interface on top of prose you're not happy with, you've decorated the wrong machine. Get the prose right first; the buttons are the easy part, and they'll be obvious once you know which moments matter.</p>
+  </div>
+
+<p>While you test, jot one note per pause: <em>"at this moment I wished I could just click X."</em> That note list becomes the Step 4 spec, the same way your original conversation became the build spec in Step 1.</p>
+</section>
+
+<footer>
+  The Backroom · Step 3 test plan · built for Angie 2026-05-23<br>
+  Test small, judge honestly, advance only on "happy." The buttons come later.
+</footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,55 @@
+# Refreshes the journal from Notion and deploys the site to GitHub Pages.
+# Runs on every push to main, on a daily schedule, and on manual trigger.
+#
+# Setup (one time):
+#   1. Repo Settings -> Secrets and variables -> Actions -> New repository secret
+#      Name: NOTION_TOKEN   Value: your Notion integration token
+#   2. Repo Settings -> Pages -> Source: "GitHub Actions"
+#
+# Note: this workflow assumes the site lives at the repo root. If your site is in
+# a subfolder (e.g. hub/), change the two paths marked below.
+
+name: Sync Notion & Deploy
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 12 * * *" # daily at 12:00 UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Sync journal from Notion
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+        run: node scripts/sync-notion.js # <- adjust path if site is in a subfolder
+
+      - uses: actions/configure-pages@v4
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: "." # <- the folder to publish (use "hub" if site is in hub/)
+
+      - id: deploy
+        uses: actions/deploy-pages@v4

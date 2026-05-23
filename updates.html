@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Journal | Byte-Sized Booksmith</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="topbar">
+    <div class="inner">
+      <div class="brand">Development <span class="mark">Hub</span></div>
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="updates.html" class="active">Journal</a>
+        <a href="resources.html">Resources</a>
+        <a href="about.html">About Angie</a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="page">
+    <header class="hero">
+      <div class="eyebrow">The build log</div>
+      <h1>Journal</h1>
+      <p class="tagline">Milestones, journal entries, and screenshots &mdash; synced from Notion.</p>
+    </header>
+
+    <div id="filters" class="filters"></div>
+    <div id="feed" class="feed">
+      <p class="empty">Loading entries&hellip;</p>
+    </div>
+
+    <footer class="foot">
+      <p>Development Hub &middot; built in public &middot; journal synced from Notion</p>
+    </footer>
+  </div>
+
+  <script src="feed.js"></script>
+  <script>
+    renderFeed({ target: "feed", filters: "filters" });
+  </script>
+</body>
+</html>

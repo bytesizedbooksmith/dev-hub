@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Backroom — Build Review</title>
+<style>
+  :root {
+    --wine: #024873;
+    --wine-dark: #022859;
+    --cream: #faf8f7;
+    --cream-dark: #ece5e5;
+    --charcoal: #333333;
+    --ink: #1f1f1f;
+    --gold: #0fbf9f;
+    --gold-soft: #7fded0;
+    --muted: #6f6a6a;
+    --rule: #e4dddd;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--cream);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .page {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 48px 32px 96px;
+  }
+  header.hero {
+    text-align: center;
+    border-bottom: 3px double var(--gold);
+    padding-bottom: 32px;
+    margin-bottom: 40px;
+  }
+  header.hero .eyebrow {
+    color: var(--wine);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  header.hero h1 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 56px;
+    margin: 12px 0 4px;
+    color: var(--wine-dark);
+    letter-spacing: -0.5px;
+  }
+  header.hero .tagline {
+    font-style: italic;
+    color: var(--muted);
+    font-size: 18px;
+    margin: 4px 0 16px;
+  }
+  header.hero .stamp {
+    display: inline-block;
+    border: 2px solid var(--wine);
+    color: var(--wine);
+    padding: 6px 18px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    font-size: 13px;
+    text-transform: uppercase;
+    transform: rotate(-2deg);
+    background: var(--cream);
+  }
+  h2 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 32px;
+    color: var(--wine-dark);
+    margin: 56px 0 8px;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 8px;
+  }
+  h2 .num {
+    color: var(--gold);
+    font-style: italic;
+    margin-right: 10px;
+  }
+  h3 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 22px;
+    color: var(--charcoal);
+    margin: 32px 0 6px;
+  }
+  p.lede {
+    font-size: 18px;
+    color: var(--charcoal);
+    margin-top: 0;
+  }
+  p { margin: 12px 0; }
+  ul, ol { margin: 8px 0 16px; padding-left: 24px; }
+  li { margin: 4px 0; }
+  code, .mono {
+    font-family: ui-monospace, SFMono-Regular, "Menlo", Consolas, "Courier New", monospace;
+    font-size: 0.9em;
+    background: var(--cream-dark);
+    padding: 1px 6px;
+    border-radius: 3px;
+    color: var(--wine-dark);
+  }
+
+  /* Cards */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin: 20px 0;
+  }
+  .card {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-left: 4px solid var(--wine);
+    padding: 16px 20px;
+    border-radius: 4px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  }
+  .card h4 {
+    margin: 0 0 6px;
+    font-family: Georgia, serif;
+    color: var(--wine-dark);
+    font-size: 18px;
+  }
+  .card .role {
+    color: var(--gold);
+    font-style: italic;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .card p { font-size: 14px; color: var(--charcoal); margin: 4px 0; }
+
+  /* Phase blocks */
+  .phase {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 20px 24px;
+    margin: 16px 0;
+    position: relative;
+  }
+  .phase::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 6px;
+    background: var(--wine);
+    border-radius: 6px 0 0 6px;
+  }
+  .phase h3 {
+    margin-top: 0;
+    color: var(--wine-dark);
+  }
+  .phase .what {
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 12px;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    font-size: 15px;
+  }
+  th, td {
+    text-align: left;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+  th {
+    background: var(--cream-dark);
+    color: var(--wine-dark);
+    font-weight: 700;
+    font-family: Georgia, serif;
+  }
+  tr:last-child td { border-bottom: none; }
+  td.sev {
+    font-weight: 700;
+    color: var(--wine);
+    white-space: nowrap;
+  }
+  .halt-yes { color: var(--wine); font-weight: 700; }
+  .halt-no { color: var(--muted); }
+
+  /* Severity badges */
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .badge.note { background: #d8eeea; color: #045a4a; }
+  .badge.word { background: #7fded0; color: #024873; }
+  .badge.sitdown { background: var(--gold); color: var(--ink); }
+  .badge.doover { background: #f2059f; color: #fff; }
+  .badge.upstairs { background: var(--wine); color: #fff; }
+
+  /* Folder tree */
+  pre.tree {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 20px 24px;
+    border-radius: 6px;
+    font-family: ui-monospace, SFMono-Regular, "Menlo", Consolas, "Courier New", monospace;
+    font-size: 13px;
+    line-height: 1.55;
+    overflow-x: auto;
+    border-left: 6px solid var(--gold);
+  }
+  pre.tree .c { color: var(--gold-soft); }
+  pre.tree .m { color: #85B7EB; }
+
+  /* Steps */
+  ol.steps {
+    counter-reset: step;
+    list-style: none;
+    padding: 0;
+  }
+  ol.steps li {
+    counter-increment: step;
+    position: relative;
+    padding: 14px 0 14px 64px;
+    border-bottom: 1px solid var(--rule);
+    margin: 0;
+  }
+  ol.steps li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0; top: 14px;
+    width: 44px; height: 44px;
+    background: var(--wine);
+    color: var(--cream);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 18px;
+  }
+  ol.steps li strong { color: var(--wine-dark); font-family: Georgia, serif; font-size: 17px; }
+  ol.steps li:last-child { border-bottom: none; }
+
+  /* Human moments */
+  .moments {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    counter-reset: moment;
+    margin: 24px 0;
+  }
+  .moment {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 16px;
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    margin-bottom: 12px;
+    position: relative;
+  }
+  .moment::before {
+    counter-increment: moment;
+    content: counter(moment);
+    background: var(--gold);
+    color: var(--ink);
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: Georgia, serif;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .moment h4 {
+    margin: 0 0 4px;
+    font-family: Georgia, serif;
+    color: var(--wine-dark);
+  }
+  .moment p { margin: 0; font-size: 14px; color: var(--charcoal); }
+
+  /* Tags */
+  .tags { margin-top: 8px; }
+  .tag {
+    display: inline-block;
+    background: var(--cream-dark);
+    color: var(--wine-dark);
+    border: 1px solid var(--rule);
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    margin-right: 6px;
+    margin-bottom: 4px;
+  }
+  .tag.donor { background: #d8eeea; color: #045a4a; }
+  .tag.fork  { background: var(--gold-soft); color: #024873; }
+  .tag.new   { background: var(--wine); color: var(--cream); }
+  .tag.author-skill { background: #dceaf5; color: #024873; }
+
+  /* Footer */
+  footer {
+    margin-top: 80px;
+    padding-top: 24px;
+    border-top: 3px double var(--gold);
+    text-align: center;
+    color: var(--muted);
+    font-size: 14px;
+    font-style: italic;
+  }
+
+  /* Pull quote */
+  blockquote {
+    border-left: 4px solid var(--gold);
+    background: #fff;
+    margin: 20px 0;
+    padding: 16px 24px;
+    font-style: italic;
+    color: var(--charcoal);
+    font-size: 17px;
+    border-radius: 0 4px 4px 0;
+  }
+  blockquote cite { display: block; margin-top: 8px; font-style: normal; font-size: 13px; color: var(--muted); }
+
+  /* Stats */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin: 24px 0 32px;
+  }
+  .stat {
+    text-align: center;
+    background: #fff;
+    border: 1px solid var(--rule);
+    padding: 18px 12px;
+    border-radius: 4px;
+  }
+  .stat .n {
+    font-family: Georgia, serif;
+    font-size: 38px;
+    font-weight: 700;
+    color: var(--wine);
+    line-height: 1;
+  }
+  .stat .label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
+  /* TOC */
+  nav.toc {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-left: 4px solid var(--gold);
+    padding: 16px 24px;
+    margin: 0 0 32px;
+    border-radius: 4px;
+    columns: 2;
+    column-gap: 32px;
+  }
+  nav.toc h3 { margin: 0 0 8px; column-span: all; font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--wine); }
+  nav.toc a { color: var(--charcoal); text-decoration: none; display: block; padding: 3px 0; font-size: 14px; }
+  nav.toc a:hover { color: var(--wine); text-decoration: underline; }
+
+  @media (max-width: 720px) {
+    header.hero h1 { font-size: 42px; }
+    nav.toc { columns: 1; }
+    .page { padding: 32px 20px 64px; }
+  }
+  @media print {
+    body { background: #fff; }
+    .page { padding: 0; max-width: 100%; }
+    .card, .phase, .moment, table { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+<header class="hero">
+  <div class="eyebrow">Build Review · The Family Machine v1</div>
+  <h1>The Backroom</h1>
+  <p class="tagline">An agentic system for writing long-form genre fiction, themed as a cozy crime family.</p>
+  <div class="stamp">Built &amp; smoke-tested · 2026-05-22</div>
+</header>
+
+<nav class="toc">
+  <h3>What's inside</h3>
+  <a href="#what">1. What it is</a>
+  <a href="#by-the-numbers">2. By the numbers</a>
+  <a href="#phases">3. The three phases</a>
+  <a href="#moments">4. The five human moments</a>
+  <a href="#ladder">5. The §3 severity ladder</a>
+  <a href="#family">6. The Family — the 17 mafia roles</a>
+  <a href="#toolkit">7. Author's editing toolkit (12 skills)</a>
+  <a href="#donor">8. Donor reuses (9 KEEP)</a>
+  <a href="#hierarchy">9. Identity hierarchy</a>
+  <a href="#machinery">10. Supporting machinery</a>
+  <a href="#tree">11. Where it lives on disk</a>
+  <a href="#steps">12. The 14 build steps</a>
+  <a href="#next">13. How to start a real book</a>
+</nav>
+
+<section id="what">
+<h2><span class="num">1.</span>What it is, in one paragraph</h2>
+<p class="lede">The author hands the machine an arrangement (or a story seed, or a brain-dump). The machine plans the book — premise, structure, characters, world, outline, voice — pausing twice for the author to catch wrong turns. Then it drafts the book one piece at a time, fully autonomously, stopping only for problems serious enough to need a human. When the draft is done, the Cleanup Crew flags book-scale problems for the author to approve.</p>
+<p>It's a sanctioned fork of Elizabeth Ann West's <em>Novel Writing Machine v0.2</em>. The donor's three-phase architecture is kept; the metaphor (F1 racing → cozy crime family), the autonomy model, the planning layer, series support, pen-name voice, and the editing roster are changed. The <strong>Family runs itself between sit-downs and only kicks the big calls upstairs to the Boss.</strong></p>
+<blockquote>
+  Decision fatigue is the enemy. When in doubt about whether something needs the author, it does not.
+  <cite>— Operating constraint baked into the Boss</cite>
+</blockquote>
+</section>
+
+<section id="by-the-numbers">
+<h2><span class="num">2.</span>By the numbers</h2>
+<div class="stats">
+  <div class="stat"><div class="n">41</div><div class="label">Skills built</div></div>
+  <div class="stat"><div class="n">17</div><div class="label">Family roles</div></div>
+  <div class="stat"><div class="n">12</div><div class="label">Author's skills</div></div>
+  <div class="stat"><div class="n">9</div><div class="label">Donor reuses</div></div>
+  <div class="stat"><div class="n">9</div><div class="label">Templates</div></div>
+  <div class="stat"><div class="n">4</div><div class="label">Beat frameworks</div></div>
+  <div class="stat"><div class="n">4</div><div class="label">Python scripts</div></div>
+  <div class="stat"><div class="n">5</div><div class="label">Human moments</div></div>
+</div>
+</section>
+
+<section id="phases">
+<h2><span class="num">3.</span>The three phases</h2>
+
+<div class="phase">
+  <h3>The Setup &nbsp;·&nbsp; planning</h3>
+  <p class="what">All the work before a single word of prose is written.</p>
+  <p>An arrangement comes in via one of three on-ramps. The machine builds eight planning artifacts: premise, beat sheet (against the named framework), scene outline, character interiority, world + the Books, style sheet, conflict map, dialogue cards. The author ratifies twice — once after the foundation, once after the blueprint.</p>
+  <div class="tags">
+    <span class="tag">Gate 1 — Foundation</span>
+    <span class="tag">Gate 2 — Blueprint</span>
+    <span class="tag">Optional shakedown piece</span>
+  </div>
+</div>
+
+<div class="phase">
+  <h3>The Job &nbsp;·&nbsp; drafting</h3>
+  <p class="what">One piece at a time, strict outline order, halt only on real breaks.</p>
+  <p>The Wheelman runs the seven-step loop on every piece. The Crew (Fixer / Bookkeeper / Earpiece) preps in parallel. The Consiglieres audit. The Boss applies the severity ladder. Sit-downs settle on the Boss's own authority. Only "Do it over" and "Kick it upstairs" halt. The one mid-draft creative call surfaced to the author is drift = discovery.</p>
+  <div class="tags">
+    <span class="tag">Strict in-order drafting</span>
+    <span class="tag">Freeze on halt</span>
+    <span class="tag">No permission pings</span>
+  </div>
+</div>
+
+<div class="phase">
+  <h3>The Cleanup &nbsp;·&nbsp; post-draft inspection</h3>
+  <p class="what">Six inspectors catch book-scale problems no single-piece reader can see.</p>
+  <p>The Closer (manuscript-scope craft), the Wire (rhythm), the Tail (crutch frequency + the author's editing roster), the Alibi (pacing-vs-plan), the Cold Read (engagement), the Payoff (promises kept). All flag candidates to one file; the author ratifies per flag. <code>voice-preservation</code> runs as the do-not-cut counterweight. For series books, <em>propose-at-close</em> drafts bible updates. Final pass: <code>proofreader</code>.</p>
+  <div class="tags">
+    <span class="tag">One craft authority (§11.2)</span>
+    <span class="tag">Nothing auto-applies</span>
+    <span class="tag">Series-bible propose-at-close</span>
+  </div>
+</div>
+</section>
+
+<section id="moments">
+<h2><span class="num">4.</span>The five human moments</h2>
+<p>Per §12 of the spec — these are the only times the machine kicks something upstairs to the author. Everything else runs autonomously.</p>
+<div class="moments">
+  <div class="moment"><div><h4>Intake review</h4><p>Approve or correct the arrangement (and, for series books, the auto-seeded fields from the bible's Read-at-Open).</p></div></div>
+  <div class="moment"><div><h4>Gate 1 — Foundation</h4><p>Premise + structure + characters before the rest of planning. If wrong here, everything downstream is wrong.</p></div></div>
+  <div class="moment"><div><h4>Gate 2 — Blueprint</h4><p>World, Books, outline, voice anchor, conflict map, dialogue cards. The donor's "scrutineering" gate. Author signs off; the Setup closes.</p></div></div>
+  <div class="moment"><div><h4>Drift = discovery</h4><p>The one mid-draft creative call — only fires when the prose discovers something better than the outline planned. Series-impact discoveries ride this gate too.</p></div></div>
+  <div class="moment"><div><h4>Cleanup ratification</h4><p>The author works through every flag. Accept / reject / revise. Series-bible propose-at-close ratifies here too if applicable.</p></div></div>
+</div>
+</section>
+
+<section id="ladder">
+<h2><span class="num">5.</span>The §3 severity ladder — the autonomy spine</h2>
+<p>The single most important behavior rule in the fork. It's what buys back the author's evenings.</p>
+<table>
+  <thead>
+    <tr><th style="width:10%">Severity</th><th style="width:18%">Mafia term</th><th>What the Boss does</th><th style="width:14%">Halts the Run?</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>1</td><td><span class="badge note">Note</span></td><td>Logged in the Books / job-log. Continue.</td><td class="halt-no">No</td></tr>
+    <tr><td>2</td><td><span class="badge word">Word</span></td><td>Queued for next checkpoint. Piece counts provisionally. Continue.</td><td class="halt-no">No</td></tr>
+    <tr><td>3</td><td><span class="badge sitdown">Sit-down</span></td><td><strong>Boss settles on his own authority.</strong> Makes the call, applies it, logs it. Continue.</td><td class="halt-no">No</td></tr>
+    <tr><td>4</td><td><span class="badge doover">Do it over</span></td><td>Piece was wrong; redraft with the issue as a constraint. Old draft discarded (saved to the Paper Trail).</td><td class="halt-yes">Yes</td></tr>
+    <tr><td>5</td><td><span class="badge upstairs">Kick it upstairs</span></td><td>Structural problem. Back to the Setup; fix the planning artifact; resume from the affected piece.</td><td class="halt-yes">Yes</td></tr>
+  </tbody>
+</table>
+</section>
+
+<section id="family">
+<h2><span class="num">6.</span>The Family — 17 mafia roles</h2>
+
+<h3>The orchestrator</h3>
+<div class="cards">
+  <div class="card"><span class="role">The conductor</span><h4>the Boss</h4><p>Orchestrates every phase. The only role that makes calls against the §3 ladder. Forked from the donor's <em>team-principal</em>.</p></div>
+</div>
+
+<h3>The Setup-phase planners</h3>
+<div class="cards">
+  <div class="card"><span class="role">Entry-point</span><h4>intake-on-ramps</h4><p>Three modes that all converge on a filled <code>the-arrangement.md</code>: filled / Seedsmith seed / brain-dump conversation.</p></div>
+  <div class="card"><span class="role">Lineage</span><h4>the Pedigree</h4><p>Resolves who belongs to whom — the pen-name → series → book hierarchy. Reports any folder/arrangement mismatch.</p></div>
+  <div class="card"><span class="role">Cross-book record</span><h4>series-bible</h4><p>Owns the modular series bible. Read-at-open auto-seeds new books; propose-at-close drafts bible updates for ratification.</p></div>
+  <div class="card"><span class="role">Beat planning</span><h4>beat-sheet</h4><p>Loads the framework named in the arrangement (RtB full + three stubs). Plans beats against the book's length target.</p></div>
+  <div class="card"><span class="role">Tension architecture</span><h4>conflict-map</h4><p>Multi-thread map of internal/interpersonal/external/structural conflicts, their escalation, and where each resolves.</p></div>
+  <div class="card"><span class="role">Voice cards</span><h4>dialogue-cards</h4><p>One card per major character. Voice fingerprint, tells, taboos, stress voice, intimate voice. Read by the Wheelman; audited by the Family Consigliere.</p></div>
+</div>
+
+<h3>The world-state engine</h3>
+<div class="cards">
+  <div class="card"><span class="role">World-state record</span><h4>the Books</h4><p>The Family's books. Knowledge state ("who knows what"), location, relationship, prop, timeline. Series canon loads here for series books.</p></div>
+</div>
+
+<h3>The Job-phase drafters</h3>
+<div class="cards">
+  <div class="card"><span class="role">The driver</span><h4>the Wheelman</h4><p>Drafts one piece at a time via the seven-step loop. Honors the outline, the Books, and the pen name's voice.</p></div>
+  <div class="card"><span class="role">Crew · on-demand</span><h4>the Fixer</h4><p>Generates a tight interiority card when a minor character gains page time mid-Job.</p></div>
+  <div class="card"><span class="role">Crew · write access</span><h4>the Bookkeeper</h4><p>The only role with write access to the dynamic half of the Books. Validates every write; saves pre-update Books to evidence.</p></div>
+  <div class="card"><span class="role">Crew · sidethought</span><h4>the Earpiece</h4><p>Captures emergent ideas the Wheelman throws off. Series-impact tags ride to the Sidethought Log for propose-at-close.</p></div>
+  <div class="card"><span class="role">Per-piece audit</span><h4>the Consiglieres</h4><p>Four jurisdictions on every finished piece — Bookkeeper's (continuity + series canon), Voice (with voice-bleed guard), Family (character truth), Rhythm (pace).</p></div>
+</div>
+
+<h3>The Cleanup Crew</h3>
+<div class="cards">
+  <div class="card"><span class="role">Manuscript-scope craft</span><h4>the Closer</h4><p>Wraps craft-editor at book scope. Pre-runs voice-preservation. Routes every other inspector's ratified rewrites through craft-editor.</p></div>
+  <div class="card"><span class="role">Cadence</span><h4>the Wire</h4><p>Sentence rhythm + opener variety across chapters. Calibrated to this pen name's voice anchor.</p></div>
+  <div class="card"><span class="role">Frequency + roster</span><h4>the Tail</h4><p>Crutch-list frequency/density + orchestrates the author's five editing skills + voice-preservation as do-not-cut counterweight.</p></div>
+  <div class="card"><span class="role">Timeline holds up</span><h4>the Alibi</h4><p>Tension + word counts vs. the plan. Drag zones, runaway zones, thread-cadence misses.</p></div>
+  <div class="card"><span class="role">Reader simulation</span><h4>the Cold Read</h4><p>Sequential first-read engagement curve. Confused / bored / hooked / moved / suspicious — the curve matters more than any single moment.</p></div>
+  <div class="card"><span class="role">Promises kept</span><h4>the Payoff</h4><p>Broken promises, orphan payoffs, partial landings. Cross-references the Cold Read's engagement at planned landings.</p></div>
+</div>
+
+<h3>The process record</h3>
+<div class="cards">
+  <div class="card"><span class="role">Keeping receipts</span><h4>the Paper Trail</h4><p>Every real run leaves a timestamped folder on disk — prompts, outputs, calls, ratifications, saved artifacts. Nothing the machine does is invisible.</p></div>
+  <div class="card"><span class="role">Dry-run toggle</span><h4>mock-mode</h4><p>If <code>.mock-mode</code> exists at project root, every model call is replaced with placeholder content. Prove the wiring works before spending a cent.</p></div>
+</div>
+</section>
+
+<section id="toolkit">
+<h2><span class="num">7.</span>The author's editing toolkit — 12 anthropic-skills brought in</h2>
+<p>Copied into the project so the Backroom doesn't depend on which plugins are loaded that day. Six measure-and-propose under the Tail; one is the counterweight; the rest fill specific gaps.</p>
+
+<h3>The Tail's measurement roster (under the §11.3 wiring)</h3>
+<div class="cards">
+  <div class="card"><span class="role">measurement</span><h4>ai-flag-vocabulary</h4><p>AI-tell words and metaphor patterns.</p></div>
+  <div class="card"><span class="role">measurement</span><h4>em-dash-converter</h4><p>Em-dash overuse vs. the pen name's policy.</p></div>
+  <div class="card"><span class="role">measurement</span><h4>repetition-tracker</h4><p>Repeated descriptors / phrases / structures at book scale.</p></div>
+  <div class="card"><span class="role">measurement</span><h4>register-precision</h4><p>Register inflation and cognitive-shortcut language.</p></div>
+  <div class="card"><span class="role">measurement</span><h4>prose-tightening</h4><p>Filler, hedging, weak constructions.</p></div>
+</div>
+
+<h3>The counterweight</h3>
+<div class="cards">
+  <div class="card"><span class="role">do-not-cut guard</span><h4>voice-preservation</h4><p>Pre-runs against the manuscript before any cuts surface. Demotes overlapping candidates to a Note so signature voice isn't trimmed by mistake.</p></div>
+</div>
+
+<h3>Other author skills wired in</h3>
+<div class="cards">
+  <div class="card"><span class="role">dialogue polish</span><h4>dialogue-polish</h4><p>Reads + proposes updates to dialogue-cards. Feeds and is fed by the cards.</p></div>
+  <div class="card"><span class="role">on-ramp 2</span><h4>story-seed (Seedsmith)</h4><p>Generates story seeds via trope-stacking; on-ramp 2 maps the seed semantically into the arrangement.</p></div>
+  <div class="card"><span class="role">new pen name</span><h4>prose-style-guide-builder</h4><p>Authors a voice bible from scratch for a brand-new pen name with no books and no existing guide.</p></div>
+  <div class="card"><span class="role">final polish</span><h4>proofreader</h4><p>Pre-publication polish for typos, punctuation, formatting. The very last step.</p></div>
+  <div class="card"><span class="role">market gut-check</span><h4>audience-audit</h4><p><strong>Pen-name-aware</strong> — loads <code>audience-profile.md</code> at the pen-name level and channels that avatar.</p></div>
+  <div class="card"><span class="role">series initial design</span><h4>series-architect</h4><p>Multi-book series design when starting brand-new. The bible captures the result; this skill helps do the design.</p></div>
+</div>
+</section>
+
+<section id="donor">
+<h2><span class="num">8.</span>Donor reuses — 9 KEEP skills inherited</h2>
+<p>From Elizabeth Ann West's <em>Novel Writing Machine v0.2</em>. Reused as-is or with the metaphor renamed (one rename: <code>world-engineer</code> → the Books).</p>
+<div class="cards">
+  <div class="card"><span class="role">donor · the loop</span><h4>chapter-writer-7step</h4><p>The seven-step drafting loop the Wheelman runs.</p></div>
+  <div class="card"><span class="role">donor · craft authority</span><h4>craft-editor</h4><p>The one craft authority — called in three scopes (in-loop, Consigliere audit, Cleanup).</p></div>
+  <div class="card"><span class="role">donor · interiority</span><h4>character-lead</h4><p>Off-screen backstory, body memory, fears with origins for every major character.</p></div>
+  <div class="card"><span class="role">donor · planning</span><h4>story-engineer</h4><p>The 17-section dossier, scene outline, payoffs, tension curve, telemetry.</p></div>
+  <div class="card"><span class="role">donor · planning</span><h4>story-dossier-cascade</h4><p>The cascading 17-section worksheet engine that story-engineer wraps.</p></div>
+  <div class="card"><span class="role">donor · word counts</span><h4>chapter-word-counter</h4><p>Deterministic word-count checks. Used by the Alibi at Cleanup.</p></div>
+  <div class="card"><span class="role">donor · stub</span><h4>naming-mechanic</h4><p>Pulls cast names from period/region-appropriate pools, anti-AI-cluster filtered.</p></div>
+  <div class="card"><span class="role">donor · stub</span><h4>style-auditor</h4><p>Extracts the empirical voice anchor from finished books. Refines the day-one Voice Bible.</p></div>
+  <div class="card"><span class="role">donor · renamed</span><h4>the Books</h4><p>Was <code>world-engineer</code>. Mafia-renamed; mechanics unchanged. Plus a new Series Canon section.</p></div>
+</div>
+</section>
+
+<section id="hierarchy">
+<h2><span class="num">9.</span>The three identity levels</h2>
+<p>Voice lives at the pen-name level and is inherited by every book under that pen name. There is no per-book voice override.</p>
+<pre class="tree"><span class="c">PEN NAME</span>   — voice identity (voice bible, style guide, voice anchor,
+              crutch list, prose rules, audience profile)
+  └─ <span class="c">SERIES</span>   — story-world identity (world, recurring cast,
+                  meta-arc, series canon)   [OPTIONAL]
+       └─ <span class="c">BOOK</span>   — the work (the-arrangement, planning stack,
+                manuscript, the Books, runs/)</pre>
+<p>A standalone book skips the Series level but still names a pen name. A series belongs to exactly one pen name. The folder location is the ground truth; the arrangement's identity fields point into it (§6.5).</p>
+</section>
+
+<section id="machinery">
+<h2><span class="num">10.</span>Supporting machinery</h2>
+
+<h3>Templates (9)</h3>
+<ul>
+  <li><code>templates/the-arrangement.md</code> — the entry-point file per book</li>
+  <li><code>templates/series/series-bible.md</code> — the modular series bible</li>
+  <li><code>templates/pen-name/</code> — seven pen-name-level files:
+    <ul>
+      <li><code>pen-name-profile.md</code> — the identity card</li>
+      <li><code>voice-bible.md</code> — author-provided source of voice intent</li>
+      <li><code>style-guide.md</code> — author-provided style rules</li>
+      <li><code>voice-anchor.md</code> — empirical voice (Style Auditor fills)</li>
+      <li><code>crutch-list.md</code> — patterns to avoid</li>
+      <li><code>prose-rules.md</code> — POV/tense habits, signature moves</li>
+      <li><code>audience-profile.md</code> — ideal reader avatar for this pen name</li>
+    </ul>
+  </li>
+</ul>
+
+<h3>Beat frameworks (4)</h3>
+<ul>
+  <li><code>frameworks/romancing-the-beat.md</code> — <strong>full worked example</strong>. Gwen Hayes's framework, 19 beats across 4 movements.</li>
+  <li><code>frameworks/5-act.md</code> — stub. Classical five-act structure.</li>
+  <li><code>frameworks/demystifying-the-beats.md</code> — stub. Susan May Warren's lie/wound → truth framework.</li>
+  <li><code>frameworks/lester-dent.md</code> — stub. The pulp 6,000-word master formula.</li>
+</ul>
+
+<h3>Python helper scripts (4)</h3>
+<ul>
+  <li><code>the-pedigree/scripts/resolve_identity.py</code> — walks the hierarchy, returns resolved paths and any folder/arrangement mismatches.</li>
+  <li><code>the-books/scripts/ledger_validate.py</code> — validates the Books' schema. Windows-cp1252 fix applied.</li>
+  <li><code>the-books/scripts/ledger_query.py</code> — character-and-time-scoped knowledge slice for the Wheelman.</li>
+  <li><code>chapter-word-counter/scripts/analyze_chapter.py</code> — deterministic per-piece word count.</li>
+</ul>
+</section>
+
+<section id="tree">
+<h2><span class="num">11.</span>Where it lives on disk</h2>
+<pre class="tree">D:\code\the-backroom\
+├── FAMILY-MACHINE-build-spec.md       <span class="m"># the spec, source of truth</span>
+├── STEP-2-claude-code-handoff.md      <span class="m"># your handoff guide</span>
+├── BUILD-REVIEW.html                  <span class="m"># this file</span>
+├── .mock-mode                         <span class="m"># exists when mock mode is ON (currently absent)</span>
+├── .claude/
+│   └── skills/                        <span class="m"># 41 SKILL.md files — the machine</span>
+├── pen-names/                         <span class="m"># your real work lives here</span>
+│   └── README.md                      <span class="m"># the identity-tree readme</span>
+├── templates/                         <span class="m"># 9 templates the Boss copies per book</span>
+│   ├── the-arrangement.md
+│   ├── pen-name/                      <span class="m"># 7 pen-name-level files</span>
+│   └── series/series-bible.md
+├── frameworks/                        <span class="m"># 4 beat-framework recipe cards</span>
+│   ├── romancing-the-beat.md         <span class="m"># full</span>
+│   ├── 5-act.md                      <span class="m"># stub</span>
+│   ├── demystifying-the-beats.md     <span class="m"># stub</span>
+│   └── lester-dent.md                <span class="m"># stub</span>
+└── novel-machine-v2-claude-execute-build-spec/  <span class="m"># donor, read-only reference</span></pre>
+</section>
+
+<section id="steps">
+<h2><span class="num">12.</span>The 14 build steps</h2>
+<ol class="steps">
+  <li><strong>Project skeleton + the Paper Trail + mock-mode.</strong> Foundation — folders, run-evidence convention, mock-mode toggle. Built first so every later piece could be tested without spending API credit.</li>
+  <li><strong>Reuse donor KEEP skills.</strong> Copied 9 donor skills as-is (one renamed: world-engineer → the Books). Caught and fixed a Windows-cp1252 bug in the Books' validator.</li>
+  <li><strong>Fork Driver → the Wheelman.</strong> Same loop wrapper, mafia naming, mock-mode and Paper-Trail checks added.</li>
+  <li><strong>Build the-arrangement.md template.</strong> Forked book-order.md with four new fields (pen_name, series_name, book_number, structure_framework).</li>
+  <li><strong>Pen-name/series/book hierarchy + the Pedigree.</strong> Six pen-name templates + the resolver skill + the Python script that walks the tree.</li>
+  <li><strong>series-bible.md modular template + the series-bible skill.</strong> Read-at-open auto-seeds; propose-at-close drafts updates for ratification.</li>
+  <li><strong>Swappable beat-framework machinery + Romancing the Beat.</strong> Full RtB recipe card; three stubs.</li>
+  <li><strong>Conflict Map + Dialogue Cards planning artifacts.</strong> Two NEW named artifacts that the donor folded elsewhere.</li>
+  <li><strong>Fork the Crew + the Consiglieres.</strong> Three Crew sub-roles as separate skills; four Consigliere jurisdictions in one skill. Series-canon + voice-bleed wirings.</li>
+  <li><strong>Fork the Cleanup Crew.</strong> Six inspectors. Three were donor TODOs that got real designs.</li>
+  <li><strong>Wire the Tail's editing roster.</strong> Copied 12 anthropic-skills in. audience-audit rewritten pen-name-aware.</li>
+  <li><strong>Fork team-principal → the Boss.</strong> The keystone. §3 ladder, freeze-on-halt, two planning gates, no permission pings.</li>
+  <li><strong>Wire three intake on-ramps.</strong> Filled / Seedsmith semantic mapping / brain-dump interview.</li>
+  <li><strong>End-to-end mock-mode smoke test.</strong> 11 phases, all passed. No API credit spent.</li>
+</ol>
+</section>
+
+<section id="next">
+<h2><span class="num">13.</span>How to start a real book</h2>
+<ol>
+  <li><strong>Open Claude Code in <code>D:\code\the-backroom\</code>.</strong> Tell it: <em>"I want to start a new book."</em> The Boss takes it from there.</li>
+  <li><strong>Bring your pen-name voice files when you create that pen name.</strong> Drop your existing voice bible / style guide / Rachel Morgan audience profile straight into the pen-name folder — don't re-write what you've already done.</li>
+  <li><strong>First real run should stay in mock mode.</strong> Create <code>.mock-mode</code> at project root, walk through one full piece end-to-end, watch what files write where and how the gates surface. Then delete the flag.</li>
+  <li><strong>Tune Romancing the Beat against your first romance.</strong> The recipe card is honest about being v1; the spec expects you to refine it against your first real book through the machine.</li>
+</ol>
+</section>
+
+<footer>
+  The Backroom · forked from Elizabeth Ann West's Novel Writing Machine v0.2 with her endorsement<br>
+  Built and reviewed on 2026-05-22 · the machine is ready
+</footer>
+
+</div>
+</body>
+</html>

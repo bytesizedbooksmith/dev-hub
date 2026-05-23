@@ -1,0 +1,27 @@
+{
+  "generatedAt": "2026-05-23",
+  "entries": [
+    {
+      "id": "369611bc-8202-8132-acb9-ed439256ebe2",
+      "title": "Kicking off the hub",
+      "date": "2026-05-23",
+      "project": "Book Machine",
+      "type": "Milestone",
+      "body": "First entry in the build log.\n\nSetting up a small hub site to share what I'm building with the Book Machine and the other tools alongside the FFA crew. The plan: a home page, an updates/journal feed pulled straight from this Notion database, and a resources section to share build docs like the one for Seedsmith.\n\nMore to come as the pieces come together.",
+      "screenshot": "",
+      "link": "",
+      "notionUrl": "https://www.notion.so/369611bc82028132acb9ed439256ebe2"
+    },
+    {
+      "id": "369611bc-8202-81e2-9adb-f9fed6ad6a0f",
+      "title": "Why Notion is the source of truth",
+      "date": "2026-05-23",
+      "project": "General",
+      "type": "Journal",
+      "body": "Decided the journal lives in Notion and the site reads from it.\n\nThe flow: I write an entry here, run a quick sync command, and the site picks it up. Only entries marked Published show up publicly, so I can keep drafts private. Keeps everything in one place and lets the site stay simple and free to host.",
+      "screenshot": "",
+      "link": "",
+      "notionUrl": "https://www.notion.so/369611bc820281e29adbf9fed6ad6a0f"
+    }
+  ]
+}

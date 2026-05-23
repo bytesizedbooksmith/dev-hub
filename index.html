@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Development Hub | Byte-Sized Booksmith</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="topbar">
+    <div class="inner">
+      <div class="brand">Development <span class="mark">Hub</span></div>
+      <nav class="nav">
+        <a href="index.html" class="active">Home</a>
+        <a href="updates.html">Journal</a>
+        <a href="resources.html">Resources</a>
+        <a href="about.html">About Angie</a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="page">
+    <header class="hero">
+      <div class="eyebrow">A build-in-public log</div>
+      <h1>Development Hub</h1>
+      <p class="tagline">Building tools that help write books &mdash; and having fun along the way.</p>
+    </header>
+
+    <p class="lede">
+      This is where I share the tools I'm building to make the writing life a little
+      easier, plus a few resources worth passing along as I go. Some of it works
+      beautifully. Some of it is held together with hope and caffeine. You'll get to
+      see both.
+    </p>
+
+    <h2>What's Here</h2>
+    <div class="cards">
+      <div class="card">
+        <h3><a href="updates.html">Journal</a></h3>
+        <p>The running build log &mdash; milestones, short entries, and the occasional screenshot, pulled straight from my Notion.</p>
+      </div>
+      <div class="card">
+        <h3><a href="resources.html">Resources</a></h3>
+        <p>Build docs and references worth sharing, like the specs behind the tools I'm putting together.</p>
+      </div>
+      <div class="card">
+        <h3><a href="about.html">About Angie</a></h3>
+        <p>Who's behind all this, why I keep building robots to do my chores, and the role the Typo Fairy plays in my life.</p>
+      </div>
+    </div>
+
+    <h2>Projects</h2>
+    <p>What I'm building, and where each one stands right now.</p>
+    <div class="projects">
+      <div class="project">
+        <div class="top">
+          <h3>Seedsmith</h3>
+          <span class="status done">Done</span>
+        </div>
+        <p>My market-intelligence tool. Built and working &mdash; a build spec to share is on the way.</p>
+      </div>
+      <div class="project">
+        <div class="top">
+          <h3>The Backroom</h3>
+          <span class="status testing">Phase 3 &middot; Testing</span>
+        </div>
+        <p>My &ldquo;book machine.&rdquo; Build spec done, backend and workflow built. Now putting it through its paces.</p>
+      </div>
+      <div class="project">
+        <div class="top">
+          <h3>Publishing Command Center</h3>
+          <span class="status shipped">v1 Shipped</span>
+        </div>
+        <p>Version 1 is out the door. Living with it for a bit before I kick off Version 1.5.</p>
+      </div>
+      <div class="project">
+        <div class="top">
+          <h3>Writing Room</h3>
+          <span class="status testing">Phase 10a &middot; Testing</span>
+        </div>
+        <p>Phase 10a is complete. In testing before I add more goodies.</p>
+      </div>
+      <div class="project">
+        <div class="top">
+          <h3>Angie Hartwell Website</h3>
+          <span class="status building">Almost There</span>
+        </div>
+        <p>The pen-name site refresh is done. Just finishing the lead magnet, then it goes live.</p>
+      </div>
+    </div>
+
+    <h2>What's New</h2>
+    <div id="latest" class="feed">
+      <p class="empty">Loading the latest entries&hellip;</p>
+    </div>
+    <p><a href="updates.html">See the full journal &rarr;</a></p>
+
+    <footer class="foot">
+      <p>Development Hub &middot; built in public &middot; journal synced from Notion</p>
+    </footer>
+  </div>
+
+  <script src="feed.js"></script>
+  <script>
+    renderFeed({ target: "latest", limit: 3, compact: true });
+  </script>
+</body>
+</html>
