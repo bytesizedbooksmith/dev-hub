@@ -517,6 +517,31 @@
     .page { padding: 0; max-width: 100%; }
     .flow-step, .scale, .band-example, .tier-card, .artifact, table, blockquote { break-inside: avoid; }
   }
+
+  /* Inline links in prose + footer */
+  p a, footer a, .credit a { color: var(--wine); text-decoration: underline; text-underline-offset: 2px; }
+  p a:hover, footer a:hover, .credit a:hover { color: var(--gold); }
+
+  /* Course attribution */
+  .credit {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-left: 6px solid var(--gold);
+    border-radius: 0 4px 4px 0;
+    padding: 14px 20px;
+    margin: 24px 0 8px;
+    font-size: 14px;
+    color: var(--charcoal);
+  }
+  .credit .credit-label {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .credit cite { font-style: italic; }
 </style>
 </head>
 <body>
@@ -528,6 +553,11 @@
   <p class="tagline">How the machine handles romance, heat, and intimate scenes — gated, tiered, and brand-consistent.</p>
   <div class="stamp">Schema + Intake live · Templates ready · 2026-05-24</div>
 </header>
+
+<div class="credit">
+  <span class="credit-label">Credit where it's due</span>
+  This subsystem was <strong>heavily</strong> influenced by Coral Hart's <cite><a href="https://plotprose.com/product/talk-dirty-to-me-claude/" target="_blank" rel="noopener">Talk Dirty to Me, Claude</a></cite> course — the framework, language, and craft thinking behind how heat and intimate scenes are handled here owe a great deal to it.
+</div>
 
 <nav class="toc">
   <h3>What's inside</h3>
@@ -898,7 +928,8 @@
 
 <footer>
   The Backroom · Heat &amp; Intimacy reference · companion to <code>SPICE-SUBSYSTEM-design-notes.md</code><br>
-  Built and reviewed on 2026-05-24 · ready for the first romance book
+  Built and reviewed on 2026-05-24 · ready for the first romance book<br>
+  Heavily influenced by Coral Hart's <a href="https://plotprose.com/product/talk-dirty-to-me-claude/" target="_blank" rel="noopener">Talk Dirty to Me, Claude</a> course.
 </footer>
 
 </div>
