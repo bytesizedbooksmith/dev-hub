@@ -40,8 +40,17 @@
     const shot = e.screenshot
       ? '<div class="shot"><img src="' + escapeHtml(e.screenshot) + '" alt="' + escapeHtml(e.title) + ' screenshot" loading="lazy" /></div>'
       : "";
-    let body = escapeHtml(e.body || "");
-    if (compact && body.length > 220) body = body.slice(0, 220).replace(/\s+\S*$/, "") + "…";
+    let raw = String(e.body || "");
+    if (compact && raw.length > 220) raw = raw.slice(0, 220).replace(/\s+\S*$/, "") + "…";
+    // Split on blank lines into paragraphs; collapse single newlines to spaces.
+    const body = raw
+      .split(/\n{2,}/)
+      .map(function (para) {
+        const text = escapeHtml(para.replace(/\s*\n\s*/g, " ").trim());
+        return text ? "<p>" + text + "</p>" : "";
+      })
+      .filter(Boolean)
+      .join("");
     const link = e.link
       ? '<div class="more"><a href="' + escapeHtml(e.link) + '" target="_blank" rel="noopener">Open link &rarr;</a></div>'
       : "";
