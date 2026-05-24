@@ -42,11 +42,11 @@
       : "";
     let raw = String(e.body || "");
     if (compact && raw.length > 220) raw = raw.slice(0, 220).replace(/\s+\S*$/, "") + "…";
-    // Split on blank lines into paragraphs; collapse single newlines to spaces.
+    // Each line becomes its own paragraph; blank lines are dropped.
     const body = raw
-      .split(/\n{2,}/)
+      .split(/\n+/)
       .map(function (para) {
-        const text = escapeHtml(para.replace(/\s*\n\s*/g, " ").trim());
+        const text = escapeHtml(para.trim());
         return text ? "<p>" + text + "</p>" : "";
       })
       .filter(Boolean)
