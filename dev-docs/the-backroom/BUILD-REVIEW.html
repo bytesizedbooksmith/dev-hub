@@ -205,8 +205,8 @@
     letter-spacing: 0.05em;
     text-transform: uppercase;
   }
-  .badge.note { background: #d8eeea; color: #045a4a; }
-  .badge.word { background: #7fded0; color: #024873; }
+  .badge.note { background: #dceaf5; color: #024873; }
+  .badge.word { background: #e6f7f3; color: #045a4a; }
   .badge.sitdown { background: var(--gold); color: var(--ink); }
   .badge.doover { background: #f2059f; color: #fff; }
   .badge.upstairs { background: var(--wine); color: #fff; }
@@ -308,10 +308,10 @@
     margin-right: 6px;
     margin-bottom: 4px;
   }
-  .tag.donor { background: #d8eeea; color: #045a4a; }
-  .tag.fork  { background: var(--gold-soft); color: #024873; }
+  .tag.donor { background: #dceaf5; color: #024873; }
+  .tag.fork  { background: var(--gold-soft); color: #045a4a; }
   .tag.new   { background: var(--wine); color: var(--cream); }
-  .tag.author-skill { background: #dceaf5; color: #024873; }
+  .tag.author-skill { background: #dceaf5; color: #045a4a; }
 
   /* Footer */
   footer {
@@ -401,6 +401,7 @@
   <h1>The Backroom</h1>
   <p class="tagline">An agentic system for writing long-form genre fiction, themed as a cozy crime family.</p>
   <div class="stamp">Built &amp; smoke-tested · 2026-05-22</div>
+  <div style="margin-top: 12px; font-size: 13px; color: var(--muted); font-style: italic;">Updated 2026-05-24 — Heat &amp; Intimacy subsystem (Phases 1–4a). See <a href="HEAT-AND-INTIMACY.html" style="color: var(--wine);">HEAT-AND-INTIMACY.html</a> for the visual reference, and Section 14 below.</div>
 </header>
 
 <nav class="toc">
@@ -418,6 +419,7 @@
   <a href="#tree">11. Where it lives on disk</a>
   <a href="#steps">12. The 14 build steps</a>
   <a href="#next">13. How to start a real book</a>
+  <a href="#spice">14. Heat &amp; Intimacy subsystem (2026-05-24)</a>
 </nav>
 
 <section id="what">
@@ -437,7 +439,7 @@
   <div class="stat"><div class="n">17</div><div class="label">Family roles</div></div>
   <div class="stat"><div class="n">12</div><div class="label">Author's skills</div></div>
   <div class="stat"><div class="n">9</div><div class="label">Donor reuses</div></div>
-  <div class="stat"><div class="n">9</div><div class="label">Templates</div></div>
+  <div class="stat"><div class="n">14</div><div class="label">Templates</div></div>
   <div class="stat"><div class="n">4</div><div class="label">Beat frameworks</div></div>
   <div class="stat"><div class="n">4</div><div class="label">Python scripts</div></div>
   <div class="stat"><div class="n">5</div><div class="label">Human moments</div></div>
@@ -452,8 +454,8 @@
   <p class="what">All the work before a single word of prose is written.</p>
   <p>An arrangement comes in via one of three on-ramps. The machine builds eight planning artifacts: premise, beat sheet (against the named framework), scene outline, character interiority, world + the Books, style sheet, conflict map, dialogue cards. The author ratifies twice — once after the foundation, once after the blueprint.</p>
   <div class="tags">
-    <span class="tag">Gate 1 — Foundation</span>
-    <span class="tag">Gate 2 — Blueprint</span>
+    <span class="tag">Foundation Nod</span>
+    <span class="tag">Blueprint Nod</span>
     <span class="tag">Optional shakedown piece</span>
   </div>
 </div>
@@ -461,7 +463,7 @@
 <div class="phase">
   <h3>The Job &nbsp;·&nbsp; drafting</h3>
   <p class="what">One piece at a time, strict outline order, halt only on real breaks.</p>
-  <p>The Wheelman runs the seven-step loop on every piece. The Crew (Fixer / Bookkeeper / Earpiece) preps in parallel. The Consiglieres audit. The Boss applies the severity ladder. Sit-downs settle on the Boss's own authority. Only "Do it over" and "Kick it upstairs" halt. The one mid-draft creative call surfaced to the author is drift = discovery.</p>
+  <p>The Wheelman runs the seven-step loop on every piece. The Crew (Fixer / Bookkeeper / Earpiece) preps in parallel. The Consiglieres audit. The Boss applies the severity ladder. Sit-downs settle on the Boss's own authority. Only "Do it over" and "Kick it upstairs" halt. The one mid-draft creative call surfaced to the author is off-script = discovery (a discovery nod).</p>
   <div class="tags">
     <span class="tag">Strict in-order drafting</span>
     <span class="tag">Freeze on halt</span>
@@ -485,11 +487,11 @@
 <h2><span class="num">4.</span>The five human moments</h2>
 <p>Per §12 of the spec — these are the only times the machine kicks something upstairs to the author. Everything else runs autonomously.</p>
 <div class="moments">
-  <div class="moment"><div><h4>Intake review</h4><p>Approve or correct the arrangement (and, for series books, the auto-seeded fields from the bible's Read-at-Open).</p></div></div>
-  <div class="moment"><div><h4>Gate 1 — Foundation</h4><p>Premise + structure + characters before the rest of planning. If wrong here, everything downstream is wrong.</p></div></div>
-  <div class="moment"><div><h4>Gate 2 — Blueprint</h4><p>World, Books, outline, voice anchor, conflict map, dialogue cards. The donor's "scrutineering" gate. Author signs off; the Setup closes.</p></div></div>
-  <div class="moment"><div><h4>Drift = discovery</h4><p>The one mid-draft creative call — only fires when the prose discovers something better than the outline planned. Series-impact discoveries ride this gate too.</p></div></div>
-  <div class="moment"><div><h4>Cleanup ratification</h4><p>The author works through every flag. Accept / reject / revise. Series-bible propose-at-close ratifies here too if applicable.</p></div></div>
+  <div class="moment"><div><h4>Intake Nod</h4><p>Approve or correct the arrangement (and, for series books, the auto-seeded fields from the bible's Read-at-Open). <strong>As of 2026-05-24:</strong> if the book's <code>heat_level</code> falls outside the pen-name <code>heat_band</code> (or the four other band-mismatch conditions trigger), the Boss surfaces the KICKBACK <em>before</em> the nod as a Family matter — author resolves before review proceeds. See Section 14.</p></div></div>
+  <div class="moment"><div><h4>Foundation Nod</h4><p>Premise + structure + characters before the rest of planning. If wrong here, everything downstream is wrong.</p></div></div>
+  <div class="moment"><div><h4>Blueprint Nod</h4><p>World, Books, outline, voice anchor, conflict map, dialogue cards. The donor's "scrutineering" gate. Author signs off; the Setup closes.</p></div></div>
+  <div class="moment"><div><h4>Off-script = discovery (discovery nod)</h4><p>The one mid-draft creative call — only fires when the prose discovers something better than the outline planned. Series-impact discoveries ride this nod too.</p></div></div>
+  <div class="moment"><div><h4>The Blessing</h4><p>Cleanup ratification — the author works through every flag. Accept / reject / revise. Series-bible propose-at-close ratifies here too if applicable.</p></div></div>
 </div>
 </section>
 
@@ -535,7 +537,7 @@
 
 <h3>The Job-phase drafters</h3>
 <div class="cards">
-  <div class="card"><span class="role">The driver</span><h4>the Wheelman</h4><p>Drafts one piece at a time via the seven-step loop. Honors the outline, the Books, and the pen name's voice.</p></div>
+  <div class="card"><span class="role">The drafter</span><h4>the Wheelman</h4><p>Drafts one piece at a time via the seven-step loop. Honors the outline, the Books, and the pen name's voice.</p></div>
   <div class="card"><span class="role">Crew · on-demand</span><h4>the Fixer</h4><p>Generates a tight interiority card when a minor character gains page time mid-Job.</p></div>
   <div class="card"><span class="role">Crew · write access</span><h4>the Bookkeeper</h4><p>The only role with write access to the dynamic half of the Books. Validates every write; saves pre-update Books to evidence.</p></div>
   <div class="card"><span class="role">Crew · sidethought</span><h4>the Earpiece</h4><p>Captures emergent ideas the Wheelman throws off. Series-impact tags ride to the Sidethought Log for propose-at-close.</p></div>
@@ -595,7 +597,7 @@
   <div class="card"><span class="role">donor · the loop</span><h4>chapter-writer-7step</h4><p>The seven-step drafting loop the Wheelman runs.</p></div>
   <div class="card"><span class="role">donor · craft authority</span><h4>craft-editor</h4><p>The one craft authority — called in three scopes (in-loop, Consigliere audit, Cleanup).</p></div>
   <div class="card"><span class="role">donor · interiority</span><h4>character-lead</h4><p>Off-screen backstory, body memory, fears with origins for every major character.</p></div>
-  <div class="card"><span class="role">donor · planning</span><h4>story-engineer</h4><p>The 17-section dossier, scene outline, payoffs, tension curve, telemetry.</p></div>
+  <div class="card"><span class="role">donor · planning</span><h4>story-engineer</h4><p>The 17-section dossier, scene outline, payoffs, tension curve, the take.</p></div>
   <div class="card"><span class="role">donor · planning</span><h4>story-dossier-cascade</h4><p>The cascading 17-section worksheet engine that story-engineer wraps.</p></div>
   <div class="card"><span class="role">donor · word counts</span><h4>chapter-word-counter</h4><p>Deterministic word-count checks. Used by the Alibi at Cleanup.</p></div>
   <div class="card"><span class="role">donor · stub</span><h4>naming-mechanic</h4><p>Pulls cast names from period/region-appropriate pools, anti-AI-cluster filtered.</p></div>
@@ -608,7 +610,10 @@
 <h2><span class="num">9.</span>The three identity levels</h2>
 <p>Voice lives at the pen-name level and is inherited by every book under that pen name. There is no per-book voice override.</p>
 <pre class="tree"><span class="c">PEN NAME</span>   — voice identity (voice bible, style guide, voice anchor,
-              crutch list, prose rules, audience profile)
+              crutch list, ick list, prose rules, audience profile)
+            — optionally: heat band + spice/ subfolder (Spice Style Sheet,
+              AI Context Block, Dialogue Flavor Palette, Kink &amp; Setting Roulette)
+              built per the activation tier — see Section 14
   └─ <span class="c">SERIES</span>   — story-world identity (world, recurring cast,
                   meta-arc, series canon)   [OPTIONAL]
        └─ <span class="c">BOOK</span>   — the work (the-arrangement, planning stack,
@@ -619,19 +624,28 @@
 <section id="machinery">
 <h2><span class="num">10.</span>Supporting machinery</h2>
 
-<h3>Templates (9)</h3>
+<h3>Templates (14)</h3>
 <ul>
-  <li><code>templates/the-arrangement.md</code> — the entry-point file per book</li>
+  <li><code>templates/the-arrangement.md</code> — the entry-point file per book (now carries <code>romance_arc</code>, numeric 0–5 <code>heat_level</code>, and <code>core_dynamic</code> per the 2026-05-24 schema update)</li>
   <li><code>templates/series/series-bible.md</code> — the modular series bible</li>
-  <li><code>templates/pen-name/</code> — seven pen-name-level files:
+  <li><code>templates/pen-name/</code> — <strong>eight</strong> pen-name-level files (was seven; <code>ick-list.md</code> added 2026-05-24):
     <ul>
-      <li><code>pen-name-profile.md</code> — the identity card</li>
+      <li><code>pen-name-profile.md</code> — the identity card (now carries optional <code>heat_band</code>)</li>
       <li><code>voice-bible.md</code> — author-provided source of voice intent</li>
       <li><code>style-guide.md</code> — author-provided style rules</li>
       <li><code>voice-anchor.md</code> — empirical voice (Style Auditor fills)</li>
       <li><code>crutch-list.md</code> — patterns to avoid</li>
+      <li><code>ick-list.md</code> — <strong>NEW</strong> — banned intimate vocabulary; sister to crutch-list at the voice layer; always built (acts as blanket "no sexual language" guardrail for non-romance pens)</li>
       <li><code>prose-rules.md</code> — POV/tense habits, signature moves</li>
       <li><code>audience-profile.md</code> — ideal reader avatar for this pen name</li>
+    </ul>
+  </li>
+  <li><code>templates/pen-name/spice/</code> — <strong>NEW</strong> — four spice-layer templates, copied into a pen-name's <code>spice/</code> folder per the activation tier:
+    <ul>
+      <li><code>spice-style-sheet.md</code> — brand handbook for intimate scenes <em>(activation ≥ light)</em></li>
+      <li><code>ai-context-block.md</code> — reusable prompt header composed from style sheet + ick list + voice bible <em>(activation ≥ light)</em></li>
+      <li><code>dialogue-flavor-palette.md</code> — the brand's flavor menu fed to per-character dialogue cards <em>(activation ≥ light)</em></li>
+      <li><code>kink-setting-roulette.md</code> — anti-default engine; setting + kink menus <em>(activation = full only — band ceiling 4–5)</em></li>
     </ul>
   </li>
 </ul>
@@ -664,9 +678,10 @@
 │   └── skills/                        <span class="m"># 41 SKILL.md files — the machine</span>
 ├── pen-names/                         <span class="m"># your real work lives here</span>
 │   └── README.md                      <span class="m"># the identity-tree readme</span>
-├── templates/                         <span class="m"># 9 templates the Boss copies per book</span>
-│   ├── the-arrangement.md
-│   ├── pen-name/                      <span class="m"># 7 pen-name-level files</span>
+├── templates/                         <span class="m"># 14 templates the Boss copies per book / per pen name</span>
+│   ├── the-arrangement.md             <span class="m"># carries romance_arc + heat_level (0-5) + core_dynamic</span>
+│   ├── pen-name/                      <span class="m"># 8 pen-name-level files (ick-list added 2026-05-24)</span>
+│   │   └── spice/                     <span class="m"># NEW — 4 spice templates, copied per activation tier</span>
 │   └── series/series-bible.md
 ├── frameworks/                        <span class="m"># 4 beat-framework recipe cards</span>
 │   ├── romancing-the-beat.md         <span class="m"># full</span>
@@ -683,14 +698,14 @@
   <li><strong>Reuse donor KEEP skills.</strong> Copied 9 donor skills as-is (one renamed: world-engineer → the Books). Caught and fixed a Windows-cp1252 bug in the Books' validator.</li>
   <li><strong>Fork Driver → the Wheelman.</strong> Same loop wrapper, mafia naming, mock-mode and Paper-Trail checks added.</li>
   <li><strong>Build the-arrangement.md template.</strong> Forked book-order.md with four new fields (pen_name, series_name, book_number, structure_framework).</li>
-  <li><strong>Pen-name/series/book hierarchy + the Pedigree.</strong> Six pen-name templates + the resolver skill + the Python script that walks the tree.</li>
+  <li><strong>Pen-name/series/book hierarchy + the Pedigree.</strong> Six pen-name templates + the resolver skill + the Python script that walks the tree. <em>(Later expanded to eight: <code>audience-profile.md</code> added with the audience-audit wiring; <code>ick-list.md</code> added 2026-05-24 with the Heat &amp; Intimacy subsystem — see Section 14.)</em></li>
   <li><strong>series-bible.md modular template + the series-bible skill.</strong> Read-at-open auto-seeds; propose-at-close drafts updates for ratification.</li>
   <li><strong>Swappable beat-framework machinery + Romancing the Beat.</strong> Full RtB recipe card; three stubs.</li>
   <li><strong>Conflict Map + Dialogue Cards planning artifacts.</strong> Two NEW named artifacts that the donor folded elsewhere.</li>
   <li><strong>Fork the Crew + the Consiglieres.</strong> Three Crew sub-roles as separate skills; four Consigliere jurisdictions in one skill. Series-canon + voice-bleed wirings.</li>
   <li><strong>Fork the Cleanup Crew.</strong> Six inspectors. Three were donor TODOs that got real designs.</li>
   <li><strong>Wire the Tail's editing roster.</strong> Copied 12 anthropic-skills in. audience-audit rewritten pen-name-aware.</li>
-  <li><strong>Fork team-principal → the Boss.</strong> The keystone. §3 ladder, freeze-on-halt, two planning gates, no permission pings.</li>
+  <li><strong>Fork team-principal → the Boss.</strong> The keystone. §3 ladder, freeze-on-halt, two planning nods (Foundation + Blueprint), no permission pings.</li>
   <li><strong>Wire three intake on-ramps.</strong> Filled / Seedsmith semantic mapping / brain-dump interview.</li>
   <li><strong>End-to-end mock-mode smoke test.</strong> 11 phases, all passed. No API credit spent.</li>
 </ol>
@@ -701,14 +716,45 @@
 <ol>
   <li><strong>Open Claude Code in <code>D:\code\the-backroom\</code>.</strong> Tell it: <em>"I want to start a new book."</em> The Boss takes it from there.</li>
   <li><strong>Bring your pen-name voice files when you create that pen name.</strong> Drop your existing voice bible / style guide / Rachel Morgan audience profile straight into the pen-name folder — don't re-write what you've already done.</li>
+  <li><strong>Have the heat-band answer ready</strong> (new at Case C — see Section 14). The Boss will ask <em>"does this pen name write romance?"</em> and <em>"if yes, what's the heat band on the 0–5 scale?"</em> The answer determines what gets copied into the pen-name folder (Ick List always; <code>spice/</code> subfolder conditional on band ceiling ≥ 2).</li>
   <li><strong>First real run should stay in mock mode.</strong> Create <code>.mock-mode</code> at project root, walk through one full piece end-to-end, watch what files write where and how the gates surface. Then delete the flag.</li>
   <li><strong>Tune Romancing the Beat against your first romance.</strong> The recipe card is honest about being v1; the spec expects you to refine it against your first real book through the machine.</li>
+  <li><strong>Populate the pen-name's voice + spice templates before the first book reaches Setup.</strong> The Ick List and the spice/ files ship as bracketed scaffolds — populate them once carefully from your Voice Bible's heat scene notes and your "Talk Dirty to Me, Claude" course materials. Placeholder-sweep doesn't scan pen-name files, so this is on you, not the machine.</li>
 </ol>
+</section>
+
+<section id="spice">
+<h2><span class="num">14.</span>Heat &amp; Intimacy subsystem <span style="font-size: 16px; color: var(--muted); font-style: italic; font-weight: normal;">— added 2026-05-24</span></h2>
+<p class="lede">The first run surfaced a real bug: heat was being silently inferred from a pen-name default rather than asked. The fix is bigger than "ask the question" — heat sits inside a tiered system gated by whether the book even has a romance arc, validated against a brand-promise band the pen name commits to, and activating a six-artifact apparatus in proportion to that band's ceiling.</p>
+
+<p><strong>Full visual reference:</strong> <a href="HEAT-AND-INTIMACY.html" style="color: var(--wine); font-weight: 700;">HEAT-AND-INTIMACY.html</a> — the 0–5 scale, the four activation tiers, the four KICKBACK conditions, the six artifacts, and the disk layout. Built as a sibling document to this Build Review.</p>
+
+<h3>The four phases of the build</h3>
+<div class="cards">
+  <div class="card"><span class="role">✓ Phase 1</span><h4>Schema</h4><p>Arrangement template gained <code>romance_arc</code>, numeric 0–5 <code>heat_level</code>, <code>core_dynamic</code>. Pen-name profile carries optional <code>heat_band</code>. NEW: <code>ick-list.md</code> at the voice layer.</p></div>
+  <div class="card"><span class="role">✓ Phase 2</span><h4>Intake behavior</h4><p>All three on-ramps ask <code>romance_arc</code> first; heat only when applicable; band validation enforced; the Boss surfaces KICKBACKs before Intake review as Family matters.</p></div>
+  <div class="card"><span class="role">✓ Phase 3</span><h4>Memory + design-doc housekeeping</h4><p>Intake-heat-level memory rewritten for the new scope. SPICE-SUBSYSTEM-design-notes.md updated with the per-phase Review log.</p></div>
+  <div class="card"><span class="role">✓ Phase 4a</span><h4>Spice templates + mafia copies</h4><p>Four spice templates under <code>templates/pen-name/spice/</code>. Ick List copied into both pen folders. Spice templates copied into <code>mafia/spice/</code> (band 4–5 = full activation). Boss Case C auto-creates conditional <code>spice/</code> for new pens.</p></div>
+  <div class="card"><span class="role">⏸ Phase 4b · deferred</span><h4>Drafting-time wrapper</h4><p>The runtime layer routing spicy scenes through <code>spice-draft</code> + <code>scene-audit</code>; <code>dialogue-cards</code> reading the new palette; Voice Consigliere reading the Ick List; per-scene heat on the outline. Waits for the first romance book to be in the Job phase — wires against a real scene, not air.</p></div>
+</div>
+
+<h3>What changed in the machine</h3>
+<ul>
+  <li><strong>Templates:</strong> 9 → 14 (added <code>ick-list.md</code> at voice layer; 4 new templates under <code>spice/</code>).</li>
+  <li><strong>Schema:</strong> arrangement gained <code>romance_arc</code>, <code>core_dynamic</code>, and numeric 0–5 <code>heat_level</code>; pen-name profile's free-text <code>default_heat_level</code> replaced with optional <code>heat_band</code>.</li>
+  <li><strong>Intake (<code>intake-on-ramps</code>):</strong> all three on-ramps updated; <code>romance_arc</code> asked first; heat gated; semantic-mapping table carries old→new scale translation for back-compat.</li>
+  <li><strong>The Boss:</strong> Case C now runs the two-question heat-band conversation and auto-creates the conditional <code>spice/</code> subfolder; the Intake Nod step gains KICKBACK handling before the nod.</li>
+  <li><strong>Existing pen-name profiles migrated:</strong> <code>mafia</code> → <code>heat_band: 4-5</code> (full activation); <code>test-pen</code> → <code>heat_band</code> removed (non-romance pen).</li>
+  <li><strong>In-flight arrangements migrated:</strong> all 4 existing arrangements gained <code>romance_arc</code> and <code>core_dynamic</code> (the dynamic drafted from existing content, marked for author confirmation); the GUI handoff spec gained the new form fields and KICKBACK alert state.</li>
+</ul>
+
+<h3>Why this matters for the first romance book</h3>
+<p>The intake conversation will feel different from the first run: <em>"Does this pen name write romance?"</em> comes before any heat question; the heat ask is on a numeric 0–5 scale; the Boss validates against the pen-name band immediately and refuses to proceed with an out-of-band commitment. The mafia pen is already configured at <code>heat_band: 4-5</code> with the spice templates in place — populate them from the "Talk Dirty to Me, Claude" course materials before the first book reaches Setup, and the apparatus will be ready when the Wheelman starts drafting.</p>
 </section>
 
 <footer>
   The Backroom · forked from Elizabeth Ann West's Novel Writing Machine v0.2 with her endorsement<br>
-  Built and reviewed on 2026-05-22 · the machine is ready
+  Built and reviewed on 2026-05-22 · Heat &amp; Intimacy subsystem added 2026-05-24 · the machine is ready
 </footer>
 
 </div>

@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Heat &amp; Intimacy — The Spice Subsystem</title>
+<style>
+  :root {
+    --wine: #024873;
+    --wine-dark: #022859;
+    --cream: #faf8f7;
+    --cream-dark: #ece5e5;
+    --charcoal: #333333;
+    --ink: #1f1f1f;
+    --gold: #0fbf9f;
+    --gold-soft: #7fded0;
+    --muted: #6f6a6a;
+    --rule: #e4dddd;
+
+    /* Heat scale palette — clean to hot (cool-toned) */
+    --h0: #e6f7f3;  /* palest teal — clean */
+    --h1: #bfeae0;  /* light teal */
+    --h2: #7fded0;  /* teal */
+    --h3: #2bb89c;  /* bright teal */
+    --h4: #0a8f77;  /* deep teal */
+    --h5: #024873;  /* deepest blue — hot */
+
+    --pass: #2f5742;
+    --kickback: #f2059f;
+    --stubbed: #6f7f96;
+    --light: #0fbf9f;
+    --full: #024873;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--cream);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .page {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 48px 32px 96px;
+  }
+  header.hero {
+    text-align: center;
+    border-bottom: 3px double var(--gold);
+    padding-bottom: 32px;
+    margin-bottom: 40px;
+  }
+  header.hero .eyebrow {
+    color: var(--wine);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  header.hero h1 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 52px;
+    margin: 12px 0 4px;
+    color: var(--wine-dark);
+    letter-spacing: -0.5px;
+  }
+  header.hero .tagline {
+    font-style: italic;
+    color: var(--muted);
+    font-size: 18px;
+    margin: 4px 0 16px;
+  }
+  header.hero .stamp {
+    display: inline-block;
+    border: 2px solid var(--wine);
+    color: var(--wine);
+    padding: 6px 18px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    font-size: 13px;
+    text-transform: uppercase;
+    transform: rotate(-2deg);
+    background: var(--cream);
+  }
+  h2 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 30px;
+    color: var(--wine-dark);
+    margin: 56px 0 8px;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 8px;
+  }
+  h2 .num {
+    color: var(--gold);
+    font-style: italic;
+    margin-right: 12px;
+  }
+  h3 {
+    font-family: Georgia, serif;
+    color: var(--wine-dark);
+    margin: 28px 0 8px;
+    font-size: 20px;
+  }
+  p.lede {
+    font-size: 18px;
+    line-height: 1.55;
+    color: var(--charcoal);
+  }
+  code {
+    background: var(--cream-dark);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 0.92em;
+    font-family: ui-monospace, SFMono-Regular, "Menlo", Consolas, monospace;
+  }
+
+  /* TOC */
+  nav.toc {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-left: 4px solid var(--gold);
+    padding: 16px 24px;
+    margin: 0 0 32px;
+    border-radius: 4px;
+    columns: 2;
+    column-gap: 32px;
+  }
+  nav.toc h3 { margin: 0 0 8px; column-span: all; font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--wine); }
+  nav.toc a { color: var(--charcoal); text-decoration: none; display: block; padding: 3px 0; font-size: 14px; }
+  nav.toc a:hover { color: var(--wine); text-decoration: underline; }
+
+  /* The flow diagram — three switches */
+  .flow {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 28px 0;
+  }
+  .flow-step {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-left: 6px solid var(--gold);
+    border-radius: 4px;
+    padding: 18px 22px;
+    margin-bottom: 8px;
+    position: relative;
+  }
+  .flow-step .q {
+    font-family: Georgia, serif;
+    font-size: 18px;
+    color: var(--wine-dark);
+    margin: 0 0 8px;
+    font-weight: 700;
+  }
+  .flow-step .branches {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 12px;
+  }
+  .branch {
+    background: var(--cream-dark);
+    padding: 10px 14px;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  .branch.pass {
+    background: #dcefe7;
+    border-left: 4px solid var(--pass);
+    color: #1f4a3e;
+  }
+  .branch.stop {
+    background: #fbd6ec;
+    border-left: 4px solid var(--kickback);
+    color: #8a1060;
+  }
+  .branch strong { display: block; margin-bottom: 4px; }
+  .flow-arrow {
+    text-align: center;
+    font-size: 24px;
+    color: var(--gold);
+    line-height: 1;
+    margin: 4px 0;
+  }
+
+  /* The 0-5 scale */
+  .scale {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 4px;
+    margin: 24px 0 12px;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--rule);
+  }
+  .scale-cell {
+    padding: 14px 10px 18px;
+    color: #fff;
+    text-align: center;
+  }
+  .scale-cell .level {
+    font-family: Georgia, serif;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .scale-cell .name {
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .scale-cell.h0 { background: var(--h0); color: var(--ink); }
+  .scale-cell.h1 { background: var(--h1); color: var(--ink); }
+  .scale-cell.h2 { background: var(--h2); color: var(--ink); }
+  .scale-cell.h3 { background: var(--h3); color: #fff; }
+  .scale-cell.h4 { background: var(--h4); color: #fff; }
+  .scale-cell.h5 { background: var(--h5); color: #fff; }
+  .scale-defs {
+    margin: 8px 0 32px;
+  }
+  .scale-def {
+    display: flex;
+    gap: 16px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .scale-def:last-child { border-bottom: none; }
+  .scale-def .chip {
+    flex-shrink: 0;
+    width: 44px; height: 44px;
+    border-radius: 4px;
+    color: #fff;
+    font-family: Georgia, serif;
+    font-size: 20px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .scale-def .chip.h0 { background: var(--h0); color: var(--ink); }
+  .scale-def .chip.h1 { background: var(--h1); color: var(--ink); }
+  .scale-def .chip.h2 { background: var(--h2); color: var(--ink); }
+  .scale-def .chip.h3 { background: var(--h3); }
+  .scale-def .chip.h4 { background: var(--h4); }
+  .scale-def .chip.h5 { background: var(--h5); }
+  .scale-def .body strong { display: block; font-family: Georgia, serif; color: var(--wine-dark); }
+  .scale-def .body span.detail { display: block; font-size: 14px; color: var(--charcoal); }
+
+  /* Band examples — overlay bands on the scale */
+  .band-examples { margin-top: 28px; }
+  .band-example {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+  }
+  .band-example .name {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .band-example .name strong {
+    font-family: Georgia, serif;
+    color: var(--wine-dark);
+    font-size: 17px;
+  }
+  .band-example .name .tier {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 10px;
+    color: #fff;
+  }
+  .band-example .name .tier.full { background: var(--full); }
+  .band-example .name .tier.light { background: var(--light); color: var(--ink); }
+  .band-example .name .tier.stubbed { background: var(--stubbed); }
+  .band-example .name .tier.omitted { background: var(--ink); }
+  .band-example .desc {
+    font-size: 14px;
+    color: var(--charcoal);
+    margin: 0 0 10px;
+  }
+  .band-bar {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 2px;
+    border-radius: 3px;
+    overflow: hidden;
+    height: 26px;
+  }
+  .band-cell {
+    background: #eee;
+    color: var(--muted);
+    font-size: 11px;
+    text-align: center;
+    line-height: 26px;
+    font-weight: 700;
+    opacity: 0.35;
+  }
+  .band-cell.in {
+    opacity: 1;
+    color: #fff;
+  }
+  .band-cell.in.h0 { background: var(--h0); color: var(--ink); }
+  .band-cell.in.h1 { background: var(--h1); color: var(--ink); }
+  .band-cell.in.h2 { background: var(--h2); color: var(--ink); }
+  .band-cell.in.h3 { background: var(--h3); }
+  .band-cell.in.h4 { background: var(--h4); }
+  .band-cell.in.h5 { background: var(--h5); }
+
+  /* Activation tier cards */
+  .tiers {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin: 24px 0;
+  }
+  .tier-card {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 18px 22px;
+    border-top: 5px solid var(--rule);
+  }
+  .tier-card.omitted { border-top-color: var(--ink); }
+  .tier-card.stubbed { border-top-color: var(--stubbed); }
+  .tier-card.light { border-top-color: var(--light); }
+  .tier-card.full { border-top-color: var(--full); }
+  .tier-card h4 {
+    margin: 0 0 4px;
+    font-family: Georgia, serif;
+    color: var(--wine-dark);
+    font-size: 18px;
+  }
+  .tier-card .trigger {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .tier-card ul {
+    margin: 8px 0 0;
+    padding-left: 20px;
+    font-size: 14px;
+  }
+  .tier-card ul li { margin-bottom: 4px; }
+  .tier-card.omitted ul li { color: var(--muted); }
+
+  /* KICKBACK table */
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    background: #fff;
+    margin: 16px 0 32px;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  th {
+    background: var(--wine);
+    color: var(--cream);
+    text-align: left;
+    padding: 10px 14px;
+    font-family: Georgia, serif;
+    font-size: 14px;
+    letter-spacing: 0.05em;
+  }
+  td {
+    padding: 12px 14px;
+    border-top: 1px solid var(--rule);
+    font-size: 14px;
+    vertical-align: top;
+  }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .badge.kickback { background: var(--kickback); color: #fff; }
+  .badge.family { background: var(--gold); color: var(--ink); }
+
+  /* Artifact cards */
+  .artifacts {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin: 24px 0;
+  }
+  .artifact {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 16px 20px;
+    position: relative;
+  }
+  .artifact .layer-tag {
+    position: absolute;
+    top: -10px;
+    left: 14px;
+    padding: 2px 10px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .artifact .layer-tag.voice { background: var(--gold-soft); color: #045a4a; }
+  .artifact .layer-tag.spice { background: var(--wine); color: var(--cream); }
+  .artifact .layer-tag.book { background: #dceaf5; color: #045a4a; }
+  .artifact h4 {
+    margin: 8px 0 6px;
+    font-family: Georgia, serif;
+    color: var(--wine-dark);
+  }
+  .artifact code { font-size: 13px; }
+  .artifact p { margin: 8px 0 0; font-size: 14px; color: var(--charcoal); }
+  .artifact .when {
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  /* Disk tree */
+  pre.tree {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 20px 24px;
+    border-radius: 6px;
+    font-family: ui-monospace, SFMono-Regular, "Menlo", Consolas, monospace;
+    font-size: 13px;
+    line-height: 1.55;
+    overflow-x: auto;
+    border-left: 6px solid var(--gold);
+  }
+  pre.tree .c { color: var(--gold-soft); }
+  pre.tree .m { color: #85B7EB; }
+  pre.tree .h { color: var(--h3); }
+
+  /* Build status */
+  .phases-status {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin: 16px 0 32px;
+  }
+  .phase-status {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 14px 18px;
+    position: relative;
+  }
+  .phase-status.done { border-left: 6px solid var(--pass); }
+  .phase-status.deferred { border-left: 6px solid var(--gold); }
+  .phase-status .label {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .phase-status.done .label { color: var(--pass); }
+  .phase-status.deferred .label { color: var(--gold); }
+  .phase-status h4 {
+    margin: 0 0 6px;
+    font-family: Georgia, serif;
+    color: var(--wine-dark);
+    font-size: 16px;
+  }
+  .phase-status p { margin: 0; font-size: 13px; color: var(--charcoal); }
+
+  blockquote {
+    border-left: 4px solid var(--gold);
+    background: #fff;
+    margin: 20px 0;
+    padding: 16px 24px;
+    font-style: italic;
+    color: var(--charcoal);
+    font-size: 17px;
+    border-radius: 0 4px 4px 0;
+  }
+  blockquote cite { display: block; margin-top: 8px; font-style: normal; font-size: 13px; color: var(--muted); }
+
+  footer {
+    margin-top: 80px;
+    padding-top: 24px;
+    border-top: 3px double var(--gold);
+    text-align: center;
+    color: var(--muted);
+    font-size: 14px;
+    font-style: italic;
+  }
+
+  @media (max-width: 720px) {
+    header.hero h1 { font-size: 38px; }
+    nav.toc { columns: 1; }
+    .page { padding: 32px 20px 64px; }
+    .scale { grid-template-columns: repeat(3, 1fr); }
+    .tiers, .artifacts, .phases-status { grid-template-columns: 1fr; }
+    .flow-step .branches { grid-template-columns: 1fr; }
+  }
+  @media print {
+    body { background: #fff; }
+    .page { padding: 0; max-width: 100%; }
+    .flow-step, .scale, .band-example, .tier-card, .artifact, table, blockquote { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+<header class="hero">
+  <div class="eyebrow">The Backroom · Spice Subsystem</div>
+  <h1>Heat &amp; Intimacy</h1>
+  <p class="tagline">How the machine handles romance, heat, and intimate scenes — gated, tiered, and brand-consistent.</p>
+  <div class="stamp">Schema + Intake live · Templates ready · 2026-05-24</div>
+</header>
+
+<nav class="toc">
+  <h3>What's inside</h3>
+  <a href="#why">1. Why this exists</a>
+  <a href="#switches">2. The two switches</a>
+  <a href="#scale">3. The 0–5 heat scale</a>
+  <a href="#band">4. The pen-name heat band</a>
+  <a href="#tiers">5. The four activation tiers</a>
+  <a href="#kickback">6. The four KICKBACK conditions</a>
+  <a href="#artifacts">7. The six artifacts</a>
+  <a href="#disk">8. Where it lives on disk</a>
+  <a href="#status">9. Build status</a>
+</nav>
+
+<section id="why">
+<h2><span class="num">1.</span>Why this exists</h2>
+<p class="lede">The first version of the Backroom treated heat as a single inferred number — one field, silently defaulted from the pen-name profile's free-text <code>default_heat_level</code>. The author's first real intake under the <code>mafia</code> pen surfaced the bug: heat is a deliberate, before-you-draft brand commitment, and it had been picked up without anyone being asked.</p>
+<p>The fix isn't just "ask the question." Heat sits inside a system: a book either has a romance arc or doesn't (the upstream switch); a romance pen name commits to a band of heat levels it never breaks (the brand promise); a specific book commits to a point inside the band (the per-book craft choice); and the brand promise sets how much of an intimate-scene apparatus the subsystem activates. This page is the visual reference for that system.</p>
+<blockquote>
+  Honest packaging beats hot packaging every time.
+  <cite>— The author's own doctrine, which the machine now enforces</cite>
+</blockquote>
+</section>
+
+<section id="switches">
+<h2><span class="num">2.</span>The two switches</h2>
+<p>Intake asks two questions, in this order. The first is the upstream switch — it can short-circuit the whole subsystem before heat is ever mentioned.</p>
+
+<div class="flow">
+
+  <div class="flow-step">
+    <p class="q">Switch 1 — <code>romance_arc</code>: does this book have a romance arc?</p>
+    <div class="branches">
+      <div class="branch pass">
+        <strong><code>full</code> or <code>subplot</code></strong>
+        Continue. Romance is in play. Heat is in scope.
+      </div>
+      <div class="branch stop">
+        <strong><code>none</code></strong>
+        Stop here. No heat asked. Spice subsystem stays stubbed regardless of any other configuration.
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <div class="flow-step">
+    <p class="q">Switch 2 — does the pen name carry a <code>heat_band</code>?</p>
+    <div class="branches">
+      <div class="branch pass">
+        <strong>Yes — band exists</strong>
+        Ask for <code>heat_level</code> (0–5). Validate it falls inside the band.
+      </div>
+      <div class="branch stop">
+        <strong>No — non-romance pen</strong>
+        <span class="badge kickback">KICKBACK</span> if any <code>heat_level</code> is committed. This pen isn't a romance brand.
+      </div>
+    </div>
+  </div>
+
+</div>
+</section>
+
+<section id="scale">
+<h2><span class="num">3.</span>The 0–5 heat scale</h2>
+<p>Numeric, six levels, calibrated to publishing conventions. Replaces the prior free-text categorical (<code>closed-door / open-door / explicit</code>). The chili-pepper emoji are decoration; the number is canonical.</p>
+
+<div class="scale">
+  <div class="scale-cell h0"><div class="level">0</div><div class="name">Clean &amp; Wholesome</div></div>
+  <div class="scale-cell h1"><div class="level">1</div><div class="name">Closed door</div></div>
+  <div class="scale-cell h2"><div class="level">2</div><div class="name">Emotional / implied</div></div>
+  <div class="scale-cell h3"><div class="level">3</div><div class="name">Mild explicit</div></div>
+  <div class="scale-cell h4"><div class="level">4</div><div class="name">Detailed explicit</div></div>
+  <div class="scale-cell h5"><div class="level">5</div><div class="name">Erotica</div></div>
+</div>
+
+<div class="scale-defs">
+  <div class="scale-def">
+    <div class="chip h0">0</div>
+    <div class="body"><strong>Clean &amp; Wholesome</strong><span class="detail">No sex. Maybe a kiss, maybe a closed door. (NEW level — gives clean-romance and non-romance pens a clean home.)</span></div>
+  </div>
+  <div class="scale-def">
+    <div class="chip h1">1</div>
+    <div class="body"><strong>Closed door</strong><span class="detail">Sex is canon, confirmed in narration, but never on the page.</span></div>
+  </div>
+  <div class="scale-def">
+    <div class="chip h2">2</div>
+    <div class="body"><strong>Emotional / implied</strong><span class="detail">On the page with them; sex comes through emotion, not mechanics.</span></div>
+  </div>
+  <div class="scale-def">
+    <div class="chip h3">3</div>
+    <div class="body"><strong>Mild explicit</strong><span class="detail">Acts on the page, softer vocabulary, no crude anatomical words.</span></div>
+  </div>
+  <div class="scale-def">
+    <div class="chip h4">4</div>
+    <div class="body"><strong>Detailed explicit</strong><span class="detail">Explicit anatomical vocabulary, detailed depiction, longer scenes. The BookTok / contemporary-bestseller zone.</span></div>
+  </div>
+  <div class="scale-def">
+    <div class="chip h5">5</div>
+    <div class="body"><strong>Erotica</strong><span class="detail">Sex is the point, not a component. Different genre, different reader contract.</span></div>
+  </div>
+</div>
+
+<p><strong>Old-to-new translation</strong> for anything still labeled on the prior 1–5 or categorical scale: old <code>1</code> (clean/closed-door) usually maps to new <code>0</code> when no sex appears on canvas, else new <code>1</code>. Old <code>4</code> = new <code>4</code>; old <code>5</code> = new <code>5</code>. The intake skill carries this translation logic for back-compat.</p>
+</section>
+
+<section id="band">
+<h2><span class="num">4.</span>The pen-name <code>heat_band</code></h2>
+<p>Heat band is the pen name's brand promise — the unbreakable range of heat levels every book under that pen commits inside. A pen name banded <code>3-4</code> never publishes a 5 (too hot for the brand) or a 2 (too tame). The band is <strong>optional</strong>; pen names that don't write romance carry no band at all.</p>
+
+<div class="band-examples">
+
+  <div class="band-example">
+    <div class="name"><strong><code>mafia</code> pen name (the current dark-mafia romance brand)</strong> <span class="tier full">Full activation</span></div>
+    <p class="desc">Band <code>4-5</code> — detailed explicit through erotica-edge, never below 4. The brand promise per the Voice Bible's "Heat scene voice notes": heat earned by restraint, hero's POV loosens by one register not three. Activation tier is set by the band's <em>ceiling</em> (5), so the full apparatus is in place.</p>
+    <div class="band-bar">
+      <div class="band-cell">0</div>
+      <div class="band-cell">1</div>
+      <div class="band-cell">2</div>
+      <div class="band-cell">3</div>
+      <div class="band-cell in h4">4</div>
+      <div class="band-cell in h5">5</div>
+    </div>
+  </div>
+
+  <div class="band-example">
+    <div class="name"><strong>A hypothetical sweet-romance pen</strong> <span class="tier stubbed">Stubbed</span></div>
+    <p class="desc">Band <code>0-1</code> — clean and wholesome through closed-door. Romance is on the page, sex is not. Activation tier is stubbed (ceiling 1) — Ick List built as a "no sexual language" guardrail, no <code>spice/</code> folder.</p>
+    <div class="band-bar">
+      <div class="band-cell in h0">0</div>
+      <div class="band-cell in h1">1</div>
+      <div class="band-cell">2</div>
+      <div class="band-cell">3</div>
+      <div class="band-cell">4</div>
+      <div class="band-cell">5</div>
+    </div>
+  </div>
+
+  <div class="band-example">
+    <div class="name"><strong>A hypothetical wide-band romance pen</strong> <span class="tier full">Full activation</span></div>
+    <p class="desc">Band <code>2-4</code> — books range from emotional/implied through detailed explicit. Activation tier is full (ceiling 4) — every spice artifact is in place because the brand needs the apparatus ready for the hardest book.</p>
+    <div class="band-bar">
+      <div class="band-cell">0</div>
+      <div class="band-cell">1</div>
+      <div class="band-cell in h2">2</div>
+      <div class="band-cell in h3">3</div>
+      <div class="band-cell in h4">4</div>
+      <div class="band-cell">5</div>
+    </div>
+  </div>
+
+  <div class="band-example">
+    <div class="name"><strong><code>test-pen</code> (Quill Sandoval — mystery / Victorian gothic UF)</strong> <span class="tier omitted">No band — omitted</span></div>
+    <p class="desc">No <code>heat_band</code> field at all. Non-romance pen name. Intake never asks about heat; the Boss kicks back any <code>heat_level</code> value as a brand mismatch. Ick List still built as a blanket "no sexual language" guardrail.</p>
+    <div class="band-bar">
+      <div class="band-cell">—</div>
+      <div class="band-cell">—</div>
+      <div class="band-cell">—</div>
+      <div class="band-cell">—</div>
+      <div class="band-cell">—</div>
+      <div class="band-cell">—</div>
+    </div>
+  </div>
+
+</div>
+</section>
+
+<section id="tiers">
+<h2><span class="num">5.</span>The four activation tiers</h2>
+<p>The pen name's heat-band <em>ceiling</em> determines how much of the spice subsystem activates. <strong>Build to the hardest book the band allows.</strong> A pen banded 3–4 activates at the 4-tier because some of her books will hit 4 — the apparatus has to be ready.</p>
+
+<div class="tiers">
+
+  <div class="tier-card omitted">
+    <h4>Omitted</h4>
+    <div class="trigger">No heat_band field at all</div>
+    <p>Non-romance pen name. The spice subsystem is not present for any book under this pen. Ick List built as blanket "no sexual language" guardrail.</p>
+    <ul>
+      <li>Ick List (always — blanket ban)</li>
+      <li>No <code>spice/</code> subfolder</li>
+      <li>Boss kicks back any <code>heat_level</code> commit</li>
+    </ul>
+  </div>
+
+  <div class="tier-card stubbed">
+    <h4>Stubbed</h4>
+    <div class="trigger">Band ceiling 0 or 1</div>
+    <p>Romance pen, but always closed-door or below. Present but inert — same pattern as the <code>naming-mechanic</code> stub.</p>
+    <ul>
+      <li>Ick List (always)</li>
+      <li>No <code>spice/</code> subfolder</li>
+      <li>Intake asks heat; validates against band</li>
+    </ul>
+  </div>
+
+  <div class="tier-card light">
+    <h4>Light</h4>
+    <div class="trigger">Band ceiling 2 or 3</div>
+    <p>Romance pen committing to mild explicit at most. The style apparatus exists; the roulette doesn't (the lower tier doesn't produce enough spicy scenes to need it).</p>
+    <ul>
+      <li>Ick List</li>
+      <li>Spice Style Sheet</li>
+      <li>AI Context Block</li>
+      <li>Dialogue Flavor Palette</li>
+      <li><em>No</em> Kink &amp; Setting Roulette</li>
+    </ul>
+  </div>
+
+  <div class="tier-card full">
+    <h4>Full</h4>
+    <div class="trigger">Band ceiling 4 or 5</div>
+    <p>Full apparatus. Roulette joins as the anti-default engine that stops every scene happening on the same kitchen counter.</p>
+    <ul>
+      <li>Ick List</li>
+      <li>Spice Style Sheet</li>
+      <li>AI Context Block</li>
+      <li>Dialogue Flavor Palette</li>
+      <li>Kink &amp; Setting Roulette</li>
+    </ul>
+  </div>
+
+</div>
+</section>
+
+<section id="kickback">
+<h2><span class="num">6.</span>The four KICKBACK conditions</h2>
+<p>A KICKBACK is a brand-mismatch detected at intake. The Boss does <strong>not</strong> auto-settle these — they're a <span class="badge family">Family matter</span>, surfaced to the author <em>before</em> the Intake review with four resolution options (change book heat / change pen-name band / change <code>romance_arc</code> / change pen name).</p>
+
+<table>
+  <thead>
+    <tr><th style="width:30%">Condition</th><th>What it means</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Out-of-band</strong> <span class="badge kickback">KICKBACK</span></td>
+      <td>Book commits a <code>heat_level</code> outside the pen-name <code>heat_band</code> (e.g. book at 5 under pen band 3–4). Brand mismatch — the pen never publishes that hot.</td>
+    </tr>
+    <tr>
+      <td><strong>Heat without band</strong> <span class="badge kickback">KICKBACK</span></td>
+      <td><code>heat_level</code> is set but the pen has no <code>heat_band</code>. The pen isn't set up as a romance brand. Either pick a different pen, set <code>romance_arc: none</code>, or add a band to the pen-name profile.</td>
+    </tr>
+    <tr>
+      <td><strong>Missing heat</strong> <span class="badge kickback">KICKBACK</span></td>
+      <td><code>romance_arc</code> is <code>full</code> or <code>subplot</code> and the pen has a band, but no <code>heat_level</code> is set. The author has to pick a value inside the band.</td>
+    </tr>
+    <tr>
+      <td><strong>Contradictory heat</strong> <span class="badge kickback">KICKBACK</span></td>
+      <td><code>romance_arc: none</code> AND a <code>heat_level</code> value can't both be present. Pick one — either there's no romance arc and heat doesn't apply, or there is and heat needs a value.</td>
+    </tr>
+  </tbody>
+</table>
+</section>
+
+<section id="artifacts">
+<h2><span class="num">7.</span>The six artifacts</h2>
+<p>Heat and intimacy work touches three layers. The Ick List sits at the voice layer (always built, alongside <code>crutch-list.md</code>). The four <code>spice/</code> files sit at the pen-name spice layer (built per the activation tier). The book-level Dialogue Cards sit at the book layer (read the pen-name palette).</p>
+
+<div class="artifacts">
+
+  <div class="artifact">
+    <span class="layer-tag voice">Voice layer</span>
+    <h4>Ick List <code>ick-list.md</code></h4>
+    <p>Banned intimate vocabulary + preferred alternatives. Sister file to <code>crutch-list.md</code> — same shape, same lifecycle, same consumer (the Voice Consigliere). Always built, for every pen name.</p>
+    <div class="when">Read by: Voice Consigliere per-piece audit · Wheelman during draft</div>
+  </div>
+
+  <div class="artifact">
+    <span class="layer-tag spice">Spice layer · all activation tiers ≥ 2</span>
+    <h4>Spice Style Sheet <code>spice/spice-style-sheet.md</code></h4>
+    <p>The brand handbook for intimate scenes — pet language, power exchange shape, favored/avoided kinks, scene architecture, voice register during heat. The connective tissue between the other spice artifacts.</p>
+    <div class="when">Read by: Wheelman during spicy-scene draft · Family Consigliere audit</div>
+  </div>
+
+  <div class="artifact">
+    <span class="layer-tag spice">Spice layer · all activation tiers ≥ 2</span>
+    <h4>AI Context Block <code>spice/ai-context-block.md</code></h4>
+    <p>Reusable prompt header composed from the Spice Style Sheet + Ick List + Voice Bible. The author pastes the composed block into project knowledge for any drafting tool working on spicy content under this pen name.</p>
+    <div class="when">Read by: any AI drafting tool (the author pastes manually)</div>
+  </div>
+
+  <div class="artifact">
+    <span class="layer-tag spice">Spice layer · all activation tiers ≥ 2</span>
+    <h4>Dialogue Flavor Palette <code>spice/dialogue-flavor-palette.md</code></h4>
+    <p>The brand's archetype palette of dialogue flavors (taunting / commanding / possessive / worshipful / etc.). The book-level <code>dialogue-cards</code> skill draws from this palette when writing per-character cards.</p>
+    <div class="when">Read by: <code>dialogue-cards</code> skill at Blueprint (Phase 4b wiring pending)</div>
+  </div>
+
+  <div class="artifact">
+    <span class="layer-tag spice">Spice layer · full activation only (ceiling 4–5)</span>
+    <h4>Kink &amp; Setting Roulette <code>spice/kink-setting-roulette.md</code></h4>
+    <p>Anti-default engine. Setting menu + kink menu + combination rules. Author rolls or picks deliberately at outline time for each spicy scene — stops every scene happening on the same kitchen counter.</p>
+    <div class="when">Read by: author at outline time · Wheelman during spicy-scene draft</div>
+  </div>
+
+  <div class="artifact">
+    <span class="layer-tag book">Book layer · per-book</span>
+    <h4>Dialogue Cards <code>dialogue-cards/&lt;character&gt;.md</code></h4>
+    <p>Per-character voice cards specializing from the pen-name Dialogue Flavor Palette. Each character picks a flavor (or blend) from the palette and writes that character's specific lines. The pen-name palette stays constant across books; book-level cards specialize it.</p>
+    <div class="when">Read by: Wheelman during draft · Family Consigliere audit · the Closer at Cleanup</div>
+  </div>
+
+</div>
+</section>
+
+<section id="disk">
+<h2><span class="num">8.</span>Where it lives on disk</h2>
+<pre class="tree">D:\code\the-backroom\
+├── templates/
+│   └── pen-name/
+│       ├── <span class="c">ick-list.md</span>                <span class="m"># NEW — voice layer, always built</span>
+│       └── spice/                       <span class="m"># NEW — pen-name spice layer</span>
+│           ├── <span class="h">spice-style-sheet.md</span>
+│           ├── <span class="h">ai-context-block.md</span>
+│           ├── <span class="h">dialogue-flavor-palette.md</span>
+│           └── <span class="h">kink-setting-roulette.md</span>   <span class="m"># full activation only</span>
+├── pen-names/
+│   ├── mafia/                           <span class="m"># heat_band: 4-5 → FULL activation</span>
+│   │   ├── voice-bible.md
+│   │   ├── crutch-list.md
+│   │   ├── <span class="c">ick-list.md</span>                <span class="m"># NEW — copied at Phase 4a</span>
+│   │   └── spice/                       <span class="m"># NEW — copied at Phase 4a</span>
+│   │       ├── <span class="h">spice-style-sheet.md</span>
+│   │       ├── <span class="h">ai-context-block.md</span>
+│   │       ├── <span class="h">dialogue-flavor-palette.md</span>
+│   │       └── <span class="h">kink-setting-roulette.md</span>
+│   └── test-pen/                        <span class="m"># non-romance — no heat_band, no spice/</span>
+│       └── <span class="c">ick-list.md</span>                <span class="m"># still built (blanket guardrail)</span>
+└── pen-names/&lt;pen&gt;/&lt;book&gt;/
+    └── the-arrangement.md               <span class="m"># carries: romance_arc + heat_level + core_dynamic</span></pre>
+</section>
+
+<section id="status">
+<h2><span class="num">9.</span>Build status</h2>
+<p>Schema, intake behavior, and pen-name-level templates are all built and in place. The drafting-time routing wrapper and per-scene heat distribution are intentionally deferred until the first romance book reaches the Job phase — they want to be shaped against a real scene being drafted, not against air.</p>
+
+<div class="phases-status">
+  <div class="phase-status done">
+    <div class="label">✓ Phase 1 · done 2026-05-24</div>
+    <h4>Schema</h4>
+    <p>Arrangement template gained <code>romance_arc</code>, numeric 0–5 <code>heat_level</code>, <code>core_dynamic</code>. Pen-name profile carries optional <code>heat_band</code>. Ick List template at voice layer. Existing pen-name profiles + in-flight arrangements migrated.</p>
+  </div>
+
+  <div class="phase-status done">
+    <div class="label">✓ Phase 2 · done 2026-05-24</div>
+    <h4>Intake behavior</h4>
+    <p>All three on-ramps ask <code>romance_arc</code> first; heat only when applicable; band validation enforced; the Boss surfaces KICKBACKs before Intake review as Family matters.</p>
+  </div>
+
+  <div class="phase-status done">
+    <div class="label">✓ Phase 3 · done 2026-05-24</div>
+    <h4>Memory + design-doc housekeeping</h4>
+    <p>Intake-heat-level memory rewritten for the new scope. SPICE-SUBSYSTEM-design-notes.md §5/§6/§8 updated with build status, resolved items, and the phase-by-phase Review log.</p>
+  </div>
+
+  <div class="phase-status done">
+    <div class="label">✓ Phase 4a · done 2026-05-24</div>
+    <h4>Spice templates + mafia pen-name copies</h4>
+    <p>Four spice templates built under <code>templates/pen-name/spice/</code>. Ick List copied into both pen-name folders. Spice templates copied into <code>mafia/spice/</code>. Boss Case C extended to auto-create the conditional <code>spice/</code> subfolder for new pen names with band ceiling ≥ 2.</p>
+  </div>
+
+  <div class="phase-status deferred">
+    <div class="label">⏸ Phase 4b · deferred — runs when the first romance book is in the Job phase</div>
+    <h4>Drafting-time routing wrapper</h4>
+    <p>The runtime layer that routes spicy scenes through <code>spice-draft</code> and ends with <code>scene-audit</code>, reading per-scene heat from the scene outline. Also: <code>dialogue-cards</code> reads the new Dialogue Flavor Palette; Voice Consigliere reads the Ick List in the audit loop; Style Auditor writes findings back to the Ick List. Deferred so the wiring is shaped against a real scene being drafted, not against air.</p>
+  </div>
+</div>
+</section>
+
+<footer>
+  The Backroom · Heat &amp; Intimacy reference · companion to <code>SPICE-SUBSYSTEM-design-notes.md</code><br>
+  Built and reviewed on 2026-05-24 · ready for the first romance book
+</footer>
+
+</div>
+</body>
+</html>
